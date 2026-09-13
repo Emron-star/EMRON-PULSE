@@ -1009,15 +1009,10 @@
             color:var(--paper); 
         }
         
-        /* Mobile specific improvements */
         @media (max-width: 480px) {
             .wrap { padding: 0 12px 50px; }
-            
-            /* Top bar adjustments */
             .brand-text h1 { font-size: 14px; }
             .brand-text p { font-size: 10px; }
-            
-            /* Threshold selector */
             .threshold-row {
                 flex-direction: column;
                 align-items: flex-start;
@@ -1027,8 +1022,6 @@
                 font-size: 10px;
                 margin-bottom: 2px;
             }
-            
-            /* Market strip */
             .strip {
                 gap: 6px;
                 margin-bottom: 12px;
@@ -1039,8 +1032,6 @@
             }
             .chip-sym { font-size: 10px; }
             .chip-price { font-size: 12px; }
-            
-            /* Panels */
             .panel {
                 padding: 14px 14px 16px;
                 border-radius: 10px;
@@ -1048,8 +1039,6 @@
             }
             .panel-head h2 { font-size: 13px; }
             .panel-head p { font-size: 10px; }
-            
-            /* Reticle */
             .reticle {
                 padding: 16px 12px;
                 border-radius: 8px;
@@ -1065,8 +1054,6 @@
                 font-size: 11px;
                 margin-bottom: 8px;
             }
-            
-            /* Buttons */
             .btn {
                 padding: 7px 12px;
                 font-size: 11px;
@@ -1082,8 +1069,6 @@
                 height: 26px;
                 font-size: 12px;
             }
-            
-            /* Confirmation banner */
             .confirm-banner {
                 gap: 8px;
                 padding: 8px 10px;
@@ -1091,14 +1076,10 @@
             }
             .confirm-eyebrow { font-size: 9px; }
             .confirm-detail { font-size: 11px; }
-            
-            /* History table */
             .hist-table th, .hist-table td {
                 padding: 4px 4px;
                 font-size: 10px;
             }
-            
-            /* Footer */
             .foot {
                 margin-top: 20px;
                 padding-top: 12px;
@@ -1109,8 +1090,6 @@
             .foot svg {
                 margin-top: 0;
             }
-            
-            /* Info modal */
             #infoModal .content {
                 padding: 18px 20px;
                 border-radius: 8px;
@@ -1122,10 +1101,8 @@
             #infoModal p { font-size: 11px; }
         }
         
-        /* Extra small devices */
         @media (max-width: 360px) {
             .wrap { padding: 0 10px 40px; }
-            
             .brand-mark {
                 width: 26px;
                 height: 26px;
@@ -1134,31 +1111,25 @@
                 width: 6px;
                 height: 6px;
             }
-            
             .brand-text h1 { font-size: 13px; }
             .brand-text p { 
                 font-size: 9px;
                 display: none;
             }
-            
             .tracked-count { font-size: 10px; }
-            
             .threshold-row .thresh-group label {
                 font-size: 9.5px;
                 padding: 3px 4px;
             }
-            
             .chip {
                 min-width: 75px;
                 padding: 7px 6px;
             }
             .chip-sym { font-size: 9px; }
             .chip-price { font-size: 11px; }
-            
             .ret-label {
                 font-size: 20px;
             }
-            
             .hist-summary {
                 gap: 12px;
             }
@@ -1180,7 +1151,7 @@
             <div class="brand-mark"></div>
             <div class="brand-text">
                 <h1>EMRON PULSE</h1>
-                <p>Rise/Fall + digit signal scanner for Deriv synthetics</p>
+                <p>Rise/Fall · digit · high/low · streak signal scanner</p>
             </div>
         </div>
         <div class="status-cluster">
@@ -1220,7 +1191,6 @@
 
     <!-- Main grid -->
     <div class="grid">
-        <!-- LEFT COLUMN -->
         <div class="col-left">
             <div class="panel">
                 <div class="panel-head">
@@ -1238,6 +1208,8 @@
                     <button class="tab" data-cat="evenodd">Even / Odd</button>
                     <button class="tab" data-cat="overunder">Over / Under</button>
                     <button class="tab" data-cat="matchdiffer">Matches / Differs</button>
+                    <button class="tab" data-cat="highlow">High Tick / Low Tick</button>
+                    <button class="tab" data-cat="onlyupdown">Only Ups / Only Downs</button>
                 </div>
                 <div class="window-picker" id="windowPicker">
                     <span>Window</span>
@@ -1245,6 +1217,27 @@
                     <button class="wbtn active" data-w="100">100</button>
                     <button class="wbtn" data-w="120">120</button>
                     <button class="wbtn" data-w="250">250</button>
+                </div>
+                <div class="window-picker" id="highLowPicker" style="display:none;">
+                    <span>Window</span>
+                    <button class="wbtn" data-hlw="50">50</button>
+                    <button class="wbtn active" data-hlw="100">100</button>
+                    <button class="wbtn" data-hlw="200">200</button>
+                    <span style="margin-left:10px;">Barrier</span>
+                    <button class="wbtn active" data-bar="auto">Auto</button>
+                    <button class="wbtn" data-bar="2">2</button>
+                    <button class="wbtn" data-bar="3">3</button>
+                    <button class="wbtn" data-bar="4">4</button>
+                    <button class="wbtn" data-bar="5">5</button>
+                    <button class="wbtn" data-bar="6">6</button>
+                    <button class="wbtn" data-bar="7">7</button>
+                </div>
+                <div class="window-picker" id="onlyUpDownPicker" style="display:none;">
+                    <span>Duration</span>
+                    <button class="wbtn" data-dur="3">3 ticks</button>
+                    <button class="wbtn active" data-dur="5">5 ticks</button>
+                    <button class="wbtn" data-dur="10">10 ticks</button>
+                    <button class="wbtn" data-dur="15">15 ticks</button>
                 </div>
                 <div class="reticle" id="resultReticle">
                     <div class="rc-tr"></div>
@@ -1273,18 +1266,25 @@
                             <h3>Condition checklist</h3>
                             <div class="cond-list" id="condList"></div>
                         </div>
+                        <div id="highLowDetail" style="display:none;">
+                            <h3>High / Low tick readout</h3>
+                            <div class="cond-list" id="highLowCondList"></div>
+                        </div>
+                        <div id="onlyUpDownDetail" style="display:none;">
+                            <h3>Streak readout</h3>
+                            <div class="cond-list" id="onlyUpDownCondList"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- RIGHT COLUMN -->
         <div class="col-right">
             <div class="panel">
                 <div class="panel-head">
                     <div>
                         <h2>Cross-market scan</h2>
-                        <p>Scores every tracked market across all four strategies and surfaces the single strongest read.</p>
+                        <p>Scores every tracked market across all six strategies and surfaces the single strongest read.</p>
                     </div>
                 </div>
                 <div class="window-picker" id="aiWindowPicker">
@@ -1357,16 +1357,14 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <div class="foot">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
             <path d="M12 2L2 7v6c0 5.25 3.75 9.74 10 11 6.25-1.26 10-5.75 10-11V7l-10-5z" stroke="#4a5b6b" stroke-width="1.4"/>
             <path d="M12 8v5M12 16.5v.01" stroke="#4a5b6b" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
-        <p>Every number on this page is computed client-side from Deriv's public tick stream. Digit strategies use a z-score against the actual observed frequency; Rise/Fall uses price momentum, market structure, trend and a regime filter. Percentages are <em>model confidence</em>, not historical accuracy — the only true hit rate shown is the Rise/Fall performance panel, which counts real resolved outcomes. Past ticks carry no memory of future ones. Trade within your own risk tolerance.</p>
+        <p>Every number on this page is computed client-side from Deriv's public tick stream. Digit strategies use a z-score against the actual observed frequency; Rise/Fall uses price momentum, market structure, trend and a regime filter; High Tick / Low Tick compares the last-digit distribution to a barrier digit; Only Ups / Only Downs estimates the consecutive-run probability. Percentages are <em>model confidence</em>, not historical accuracy — the only true hit rate shown is the Rise/Fall performance panel, which counts real resolved outcomes. Past ticks carry no memory of future ones. Trade within your own risk tolerance.</p>
     </div>
 
-    <!-- Info modal -->
     <div id="infoModal">
         <div class="content">
             <span class="close">&times;</span>
@@ -1378,6 +1376,8 @@
                 <li><strong>Even/Odd:</strong> Bias toward even or odd last digits</li>
                 <li><strong>Over/Under:</strong> Bias toward digits ≥5 or &lt;5</li>
                 <li><strong>Matches/Differs:</strong> Bias toward repeated digits or avoidance of repeats</li>
+                <li><strong>High Tick / Low Tick:</strong> Compares the last-digit distribution against a barrier digit (auto-selected or fixed). Predicts whether the next last digit will land <em>above</em> the barrier (HIGH TICK) or <em>below</em> it (LOW TICK). Uses a Jeffreys-smoothed proportion test against the fair baseline for that barrier.</li>
+                <li><strong>Only Ups / Only Downs:</strong> Estimates the per-tick up/down bias and compares the probability of a full N-tick consecutive run against the fair-coin baseline of 0.5<sup>N</sup>.</li>
             </ul>
             <p><strong>Statistics:</strong></p>
             <ul>
@@ -1387,6 +1387,8 @@
                 <li><strong>Signal confirmation:</strong> the direction must persist for several consecutive ticks</li>
                 <li><strong>Signal decay:</strong> confidence fades as time passes after the signal</li>
                 <li><strong>Deduplication:</strong> prevents repeated alerts on the same move</li>
+                <li><strong>High/Low resolution:</strong> the barrier digit is frozen at signal time; the very next tick's last digit is compared against it</li>
+                <li><strong>Only Ups/Downs resolution:</strong> the winning streak is frozen at signal time, and every subsequent tick is checked until the run completes or breaks</li>
             </ul>
             <p><strong>Confidence vs accuracy:</strong> the percentage beside a live call is a model score. The Rise/Fall performance panel is the only place a real, measured hit rate is shown.</p>
             <p>Past performance does not guarantee future results. Trade responsibly.</p>
@@ -1401,12 +1403,13 @@
 
         /* --------------------------------------------------------------
            EMRON PULSE — Updated Signal Engine
-           Rise/Fall  : price-sequence momentum + structure + trend + regime
-           Digit cats : Wilson-adjusted z, multi-scale ensemble, regime filter
-           Shared     : confirmation persistence, cooldown, decay, logging
+           Rise/Fall   : price-sequence momentum + structure + trend + regime
+           Digit cats  : Wilson-adjusted z, multi-scale ensemble, regime filter
+           High/Low    : barrier-digit vs last-digit distribution (z-tested)
+           Only Ups/Dn : consecutive-run probability vs 0.5^N baseline
+           Shared      : confirmation persistence, cooldown, decay, logging
            -------------------------------------------------------------- */
 
-        /* ==== CONFIG ==== */
         const SYMBOLS = [
             { code: "R_10", short: "V10", name: "Volatility 10 Index", decimals: 3 },
             { code: "R_25", short: "V25", name: "Volatility 25 Index", decimals: 3 },
@@ -1432,15 +1435,16 @@
         const AI_SCAN_INTERVAL_MS = 4000;
         const RENDER_THROTTLE_MS = 180;
 
-        const CATS = { risefall: true, evenodd: true, overunder: true, matchdiffer: true };
+        const CATS = { risefall: true, evenodd: true, overunder: true, matchdiffer: true, highlow: true, onlyupdown: true };
         const CAT_LABELS = {
             risefall: "Rise / Fall",
             evenodd: "Even / Odd",
             overunder: "Over / Under",
-            matchdiffer: "Matches / Differs"
+            matchdiffer: "Matches / Differs",
+            highlow: "High Tick / Low Tick",
+            onlyupdown: "Only Ups / Only Downs"
         };
 
-        /* Rise/Fall engine tuning */
         const RF = {
             MIN_TICKS: 30,
             ATR_LOOKBACK: 50,
@@ -1455,7 +1459,21 @@
             CHOP_CONF_CAP: 60
         };
 
-        /* ==== STATE ==== */
+        /* High / Low Tick — now digit-barrier based */
+        const HL = {
+            MIN_TICKS: 25,
+            DEFAULT_WINDOW: 100,
+            DEFAULT_BARRIER: "auto",
+            MIN_Z: 1.0
+        };
+
+        const OU = {
+            MIN_TICKS: 25,
+            LOOKBACK: 50,
+            DEFAULT_DURATION: 5,
+            MIN_SCORE: 0.30
+        };
+
         const state = {
             connection: "connecting",
             reconnectAttempts: 0,
@@ -1475,6 +1493,9 @@
             lastSignalTick: new Map(),
             symbolStrengthHistory: new Map(),
             threshold: 1.0,
+            highLowWindow: HL.DEFAULT_WINDOW,
+            highLowBarrier: HL.DEFAULT_BARRIER,
+            onlyUpDownDuration: OU.DEFAULT_DURATION,
             rfStats: { signals: 0, wins: 0, losses: 0, run: 0, runDir: null, last20: [] }
         };
 
@@ -1516,6 +1537,14 @@
             return var_ === 0 ? 0 : cov / var_;
         }
 
+        function normCdf(x) {
+            const t = 1 / (1 + 0.2316419 * Math.abs(x));
+            const d = 0.3989422804014327 * Math.exp(-x * x / 2);
+            const p = d * t * (0.319381530 + t * (-0.356563782 + t * (1.781477937 +
+                      t * (-1.821255978 + t * 1.330274429))));
+            return x >= 0 ? 1 - p : p;
+        }
+
         function multiScaleZ(mkt, baseWindow, category) {
             const scales = [0.5, 1, 2];
             let sumW = 0, sumZ = 0;
@@ -1533,7 +1562,7 @@
             return sumW ? sumZ / sumW : 0;
         }
 
-        /* ==== DIGIT CATEGORY EVALUATION (unchanged maths, normalised output) ==== */
+        /* ==== DIGIT CATEGORY EVALUATION ==== */
         function evaluateCategoryRaw(mkt, category, windowSize) {
             const digits = mkt.digits.slice(-windowSize);
             if (digits.length < Math.min(20, windowSize)) return null;
@@ -1764,9 +1793,194 @@
             };
         }
 
+        /* ==== HIGH / LOW TICK ENGINE (barrier digit) ==== */
+        function evaluateHighLow(mkt, windowSize) {
+            const win = state.highLowWindow;
+            const digits = mkt.digits.slice(-win);
+            if (digits.length < HL.MIN_TICKS) return null;
+
+            const counts = new Array(10).fill(0);
+            digits.forEach(d => counts[d]++);
+            const n = digits.length;
+
+            // Modal digit — the single most frequent digit in the window
+            let modeDigit = 0, modeCount = -1;
+            for (let d = 0; d < 10; d++) {
+                if (counts[d] > modeCount) { modeCount = counts[d]; modeDigit = d; }
+            }
+
+            const barriers = state.highLowBarrier === "auto"
+                ? [1, 2, 3, 4, 5, 6, 7, 8]
+                : [state.highLowBarrier];
+
+            let best = null;
+            for (const b of barriers) {
+                if (b < 1 || b > 8) continue;
+
+                let above = 0, below = 0;
+                for (let d = 0; d < 10; d++) {
+                    if (d > b) above += counts[d];
+                    if (d < b) below += counts[d];
+                }
+                const baseHigh = (9 - b) / 10;
+                const baseLow  = b / 10;
+                const pHigh = (above + 0.5) / (n + 1);
+                const pLow  = (below + 0.5) / (n + 1);
+                const zHigh = wilsonZ(above, n, baseHigh);
+                const zLow  = wilsonZ(below, n, baseLow);
+
+                let cand = null;
+                if (zHigh >= 0 && zHigh >= zLow) {
+                    cand = {
+                        barrier: b,
+                        direction: "up",
+                        label: "HIGH TICK",
+                        sideLabel: `> ${b}`,
+                        p: pHigh,
+                        base: baseHigh,
+                        z: zHigh,
+                        above, below
+                    };
+                } else if (zLow >= 0) {
+                    cand = {
+                        barrier: b,
+                        direction: "down",
+                        label: "LOW TICK",
+                        sideLabel: `< ${b}`,
+                        p: pLow,
+                        base: baseLow,
+                        z: zLow,
+                        above, below
+                    };
+                }
+                if (!cand) continue;
+                cand.absZ = cand.z;
+                cand.absScore = Math.max(0, Math.min(1, Math.tanh(cand.z / 3)));
+                if (!best || cand.absScore > best.absScore) best = cand;
+            }
+
+            if (!best) return null;
+
+            const confidence = Math.round(50 + 45 * Math.tanh(best.absZ / 3));
+            const label = `${best.label} ${best.sideLabel}`;
+
+            return {
+                category: "highlow",
+                label,
+                direction: best.direction,
+                score: best.direction === "up" ? best.absScore : -best.absScore,
+                absScore: best.absScore,
+                strength: best.absScore,
+                confidence,
+                z: best.z,
+                absZ: best.absZ,
+                n,
+                meta: {
+                    barrier: best.barrier,
+                    sideLabel: best.sideLabel,
+                    predictedDigit: modeDigit,
+                    modeCount,
+                    p: best.p,
+                    base: best.base,
+                    pHigh: (best.above + 0.5) / (n + 1),
+                    pLow:  (best.below + 0.5) / (n + 1),
+                    baseHigh: (9 - best.barrier) / 10,
+                    baseLow:  best.barrier / 10,
+                    above: best.above,
+                    below: best.below,
+                    counts,
+                    autoBarrier: state.highLowBarrier === "auto"
+                }
+            };
+        }
+
+        /* ==== ONLY UPS / ONLY DOWNS ENGINE ==== */
+        function currentUpDownStreak(q) {
+            if (q.length < 2) return { dir: null, len: 0 };
+            let len = 0;
+            let dir = null;
+            for (let i = q.length - 1; i > 0; i--) {
+                const d = q[i] - q[i - 1];
+                const sign = d > 0 ? "up" : d < 0 ? "down" : null;
+                if (sign === null) break;
+                if (dir === null) { dir = sign; len = 1; }
+                else if (sign === dir) len++;
+                else break;
+            }
+            return { dir, len };
+        }
+
+        function evaluateOnlyUpDown(mkt, windowSize) {
+            const q = mkt.quotes;
+            if (q.length < OU.MIN_TICKS) return null;
+
+            const lb = Math.min(q.length - 1, OU.LOOKBACK);
+            if (lb < 15) return null;
+
+            let ups = 0, downs = 0;
+            for (let i = q.length - lb; i < q.length; i++) {
+                const d = q[i] - q[i - 1];
+                if (d > 0) ups++;
+                else if (d < 0) downs++;
+            }
+            const total = ups + downs;
+            if (total < 10) return null;
+
+            const pUp = (ups + 0.5) / (total + 1);
+            const pDown = 1 - pUp;
+
+            const duration = state.onlyUpDownDuration;
+            const baseline = Math.pow(0.5, duration);
+
+            const pOnlyUps = Math.pow(pUp, duration);
+            const pOnlyDowns = Math.pow(pDown, duration);
+
+            const isUps = pOnlyUps >= pOnlyDowns;
+            const p = isUps ? pOnlyUps : pOnlyDowns;
+
+            const advantage = p / baseline;
+            const advScore = Math.max(0, Math.tanh(Math.log(Math.max(1, advantage)) / 2));
+
+            const wins = isUps ? ups : downs;
+            const zSide = wilsonZ(wins, total, 0.5);
+            const zAbs = Math.abs(zSide);
+            const zFactor = Math.min(1, zAbs / 2);
+
+            const absScore = advScore * zFactor;
+            const direction = isUps ? "up" : "down";
+            const confidence = Math.round(50 + 45 * Math.tanh(absScore / 1.0));
+            const z = (p - baseline) / Math.sqrt(Math.max(1e-9, baseline * (1 - baseline) / Math.max(1, total)));
+
+            const streak = currentUpDownStreak(q);
+
+            return {
+                category: "onlyupdown",
+                label: isUps ? "ONLY UPS" : "ONLY DOWNS",
+                direction,
+                score: isUps ? absScore : -absScore,
+                absScore,
+                strength: absScore,
+                confidence,
+                z,
+                absZ: Math.abs(z),
+                n: q.length,
+                meta: {
+                    duration, baseline,
+                    pUp, pDown,
+                    pOnlyUps, pOnlyDowns, p,
+                    isUps, advantage,
+                    ups, downs, total,
+                    currentStreakLen: streak.len,
+                    currentStreakDir: streak.dir
+                }
+            };
+        }
+
         /* ==== UNIFIED DISPATCH / SCORING ==== */
         function evaluateCategory(mkt, category, windowSize) {
-            if (category === "risefall") return evaluateRiseFall(mkt, windowSize);
+            if (category === "risefall")   return evaluateRiseFall(mkt, windowSize);
+            if (category === "highlow")    return evaluateHighLow(mkt, windowSize);
+            if (category === "onlyupdown") return evaluateOnlyUpDown(mkt, windowSize);
             return evaluateCategoryRaw(mkt, category, windowSize);
         }
 
@@ -1781,9 +1995,18 @@
                 if (s >= 0.78) return "very strong";
                 if (s >= 0.62) return "strong";
                 if (s >= 0.46) return "medium";
-                if (s >= 0.34) return "weak";
+                if (s >= 0.30) return "weak";
                 return null;
             }
+            if (result.category === "onlyupdown") {
+                const s = result.absScore;
+                if (s >= 0.78) return "very strong";
+                if (s >= 0.62) return "strong";
+                if (s >= 0.46) return "medium";
+                if (s >= 0.30) return "weak";
+                return null;
+            }
+            // highlow behaves like a digit strategy → use z
             const z = result.absZ;
             if (z >= 2.75) return "very strong";
             if (z >= 2.0) return "strong";
@@ -1797,12 +2020,18 @@
             if (result.category === "risefall") {
                 return result.meta.regimeTrending && result.absScore >= RF.MIN_SCORE;
             }
+            if (result.category === "highlow") {
+                return result.absZ >= state.threshold;
+            }
+            if (result.category === "onlyupdown") {
+                return result.absScore >= OU.MIN_SCORE;
+            }
             return result.absZ >= state.threshold;
         }
 
         function confidenceOf(result) {
             if (!result) return 0;
-            if (result.category === "risefall") return result.confidence;
+            if (result.category === "risefall" || result.category === "onlyupdown") return result.confidence;
             return confidenceFromZ(result.absZ);
         }
 
@@ -1850,6 +2079,19 @@
 
         /* ---- Pending signal resolution ---- */
         function outcomeSatisfied(entry, digit, quote) {
+            if (entry.category === "highlow") {
+                const hm = entry.highLowMeta;
+                if (!hm || digit == null) return false;
+                if (entry.direction === "up") return digit > hm.barrier;
+                return digit < hm.barrier;
+            }
+            if (entry.category === "onlyupdown") {
+                const om = entry.onlyUpDownMeta;
+                if (!om) return false;
+                if (om.broke) return false;
+                if (om.ticksChecked < om.duration) return false;
+                return true;
+            }
             if (entry.category === "risefall") {
                 if (entry.refQuote == null || quote == null) return false;
                 if (quote === entry.refQuote) return false;
@@ -1877,6 +2119,30 @@
             if (mkt.tickCount - lastTick < COOLDOWN_TICKS) return;
             state.lastSignalTick.set(result.symbol, mkt.tickCount);
 
+            let resolveAtTick = mkt.tickCount + RESOLVE_AFTER_TICKS;
+            let highLowMeta = null;
+            let onlyUpDownMeta = null;
+
+            if (result.category === "highlow" && result.meta) {
+                resolveAtTick = mkt.tickCount + 1;
+                highLowMeta = {
+                    barrier: result.meta.barrier,
+                    sideLabel: result.meta.sideLabel,
+                    predictedDigit: result.meta.predictedDigit
+                };
+            } else if (result.category === "onlyupdown" && result.meta) {
+                const duration = result.meta.duration;
+                resolveAtTick = mkt.tickCount + duration;
+                const spot = mkt.quotes.length ? mkt.quotes[mkt.quotes.length - 1] : null;
+                onlyUpDownMeta = {
+                    duration,
+                    predicted: result.meta.isUps ? "up" : "down",
+                    lastQuote: spot,
+                    ticksChecked: 0,
+                    broke: false
+                };
+            }
+
             const entry = {
                 id: ++historySeq,
                 symbol: result.symbol,
@@ -1890,7 +2156,9 @@
                 refQuote: mkt.quotes.length ? mkt.quotes[mkt.quotes.length - 1] : null,
                 status: "pending",
                 createdAt: Date.now(),
-                resolveAtTick: mkt.tickCount + RESOLVE_AFTER_TICKS
+                resolveAtTick,
+                highLowMeta,
+                onlyUpDownMeta
             };
             state.history.unshift(entry);
             if (state.history.length > 40) state.history.pop();
@@ -1910,6 +2178,18 @@
             const stillPending = [];
             let resolvedAny = false;
             pending.forEach(entry => {
+                if (entry.category === "onlyupdown" && entry.onlyUpDownMeta && latestQuote != null) {
+                    const om = entry.onlyUpDownMeta;
+                    if (!om.broke) {
+                        if (om.lastQuote != null) {
+                            const delta = latestQuote - om.lastQuote;
+                            const dir = delta > 0 ? "up" : delta < 0 ? "down" : null;
+                            if (dir !== om.predicted) om.broke = true;
+                            om.ticksChecked++;
+                        }
+                        om.lastQuote = latestQuote;
+                    }
+                }
                 if (tickIndex >= entry.resolveAtTick) {
                     const hit = outcomeSatisfied(entry, latestDigit, latestQuote);
                     entry.status = hit ? "hit" : "miss";
@@ -1940,9 +2220,7 @@
             Object.keys(CATS).forEach(cat => {
                 const key = symbolCode + "|" + cat;
 
-                // Digit categories additionally require a non-flat autocorrelation regime.
-                // Rise/Fall carries its own regime test inside the score, so it is exempt here.
-                const regimePass = (cat === "risefall") ? true : regimeOK;
+                const regimePass = (cat === "risefall" || cat === "highlow" || cat === "onlyupdown") ? true : regimeOK;
 
                 if (!regimePass) {
                     state.confirmTracking.set(key, { label: null, streak: 0, confirmed: false });
@@ -2024,7 +2302,14 @@
             }
             const latest = active[active.length - 1];
             const dirClass = latest.direction === "up" ? "up" : "down";
-            const arrow = latest.direction === "up" ? "⬆" : "⬇";
+            let arrow;
+            if (latest.category === "highlow") {
+                arrow = latest.direction === "up" ? "▲" : "▼";
+            } else if (latest.category === "onlyupdown") {
+                arrow = latest.direction === "up" ? "⇈" : "⇊";
+            } else {
+                arrow = latest.direction === "up" ? "⬆" : "⬇";
+            }
             detail.innerHTML = `
                 <span class="cf-label ${dirClass}">${arrow} ${latest.label}</span>
                 on <b>${latest.marketName}</b> · ${CAT_LABELS[latest.category] || latest.category} · ${latest.confidence}% confidence
@@ -2117,18 +2402,29 @@
         function renderSignalsPanel() {
             const mkt = currentMarket();
             const isRF = state.activeTab === "risefall";
+            const isHL = state.activeTab === "highlow";
+            const isOU = state.activeTab === "onlyupdown";
 
             document.getElementById("signalsHeading").textContent =
-                isRF ? "Rise / Fall readout" : "Signal readout";
+                isRF ? "Rise / Fall readout" :
+                isHL ? "High Tick / Low Tick readout" :
+                isOU ? "Only Ups / Only Downs readout" :
+                "Signal readout";
+
             document.getElementById("signalsSub").innerHTML = isRF
                 ? `Reads the last <span id="windowLabelText">${state.windowSize}</span> ticks of the price sequence — momentum, structure, trend and regime must agree before a call is confirmed.`
+                : isHL
+                ? `Examines the last-digit distribution over the last ${state.highLowWindow} ticks. Compares the observed proportion above (or below) the barrier digit against its fair baseline, and predicts the next tick's last digit as <b>HIGH TICK</b> (above barrier) or <b>LOW TICK</b> (below barrier). Barrier is ${state.highLowBarrier === "auto" ? "auto-selected for the strongest edge" : "fixed at " + state.highLowBarrier}.`
+                : isOU
+                ? `Estimates the per-tick up/down bias from the last ${OU.LOOKBACK} ticks (Jeffreys-smoothed) and compares P(${state.onlyUpDownDuration} consecutive moves) against the fair-coin baseline of 0.5<sup>${state.onlyUpDownDuration}</sup>.`
                 : `Reads the last <span id="windowLabelText">${state.windowSize}</span> ticks on the selected market for a statistically significant departure from randomness.`;
 
             document.getElementById("retMarket").textContent = mkt.name;
 
+            const useEnsemble = !isRF && !isHL && !isOU;
             const ensembleSwitch = document.getElementById("ensembleSwitch");
-            ensembleSwitch.style.opacity = isRF ? "0.35" : "1";
-            ensembleSwitch.style.pointerEvents = isRF ? "none" : "auto";
+            ensembleSwitch.style.opacity = useEnsemble ? "1" : "0.35";
+            ensembleSwitch.style.pointerEvents = useEnsemble ? "auto" : "none";
 
             const reticle = document.getElementById("resultReticle");
             const eyebrow = document.getElementById("retEyebrow");
@@ -2141,7 +2437,6 @@
             const confirmKey = state.selectedSymbol + "|" + state.activeTab;
             const confirmed = state.activeConfirmations.get(confirmKey);
 
-            /* ---- Confirmed state (any category) ---- */
             if (confirmed) {
                 reticle.classList.add("acquired", "confirmed");
                 eyebrow.textContent = "Confirmed — trade now";
@@ -2159,8 +2454,15 @@
                 renderRiseFallReticle(mkt, reticle, eyebrow, label, sub);
                 return;
             }
+            if (isHL) {
+                renderHighLowReticle(mkt, reticle, eyebrow, label, sub);
+                return;
+            }
+            if (isOU) {
+                renderOnlyUpDownReticle(mkt, reticle, eyebrow, label, sub);
+                return;
+            }
 
-            /* ---- Digit categories ---- */
             const waitMsg = formatWait(mkt);
             if (waitMsg) {
                 reticle.classList.remove("acquired");
@@ -2247,12 +2549,93 @@
             sub.textContent = "";
         }
 
-        function drawDigitHistogram(canvas, mkt) {
+        function renderHighLowReticle(mkt, reticle, eyebrow, label, sub) {
+            const res = evaluateHighLow(mkt, state.windowSize);
+            if (!res) {
+                reticle.classList.remove("acquired");
+                eyebrow.textContent = "Watching";
+                eyebrow.classList.remove("acquired");
+                label.className = "ret-label idle";
+                label.textContent = "Collecting ticks…";
+                sub.textContent = `High/Low needs at least ${HL.MIN_TICKS} ticks — ${mkt.digits.length} so far.`;
+                return;
+            }
+
+            const tier = tierFor(res);
+            const m = res.meta;
+            const basePct = (m.base * 100).toFixed(1);
+            const pPct = (m.p * 100).toFixed(1);
+
+            if (!tier) {
+                reticle.classList.remove("acquired");
+                eyebrow.textContent = "Watching";
+                eyebrow.classList.remove("acquired");
+                label.className = "ret-label idle";
+                label.textContent = "No barrier edge";
+                sub.textContent = `Best side: ${res.label} · P=${pPct}% vs baseline ${basePct}% · barrier ${m.barrier}`;
+                return;
+            }
+
+            reticle.classList.add("acquired");
+            eyebrow.textContent = "Target acquired";
+            eyebrow.classList.add("acquired");
+            label.className = "ret-label " + res.direction;
+            label.textContent = res.label;
+
+            setConfidenceLine("retConfidenceLine", sub,
+                `<b>${res.confidence}%</b> confidence &middot; ${tier} &middot; barrier ${m.barrier}`);
+
+            const predictedInfo = m.autoBarrier
+                ? `Auto-barrier ${m.barrier} · predicted digit ${m.predictedDigit} (${m.modeCount}×) · P=${pPct}% vs ${basePct}%`
+                : `Barrier ${m.barrier} · predicted digit ${m.predictedDigit} (${m.modeCount}×) · P=${pPct}% vs ${basePct}%`;
+            sub.textContent = predictedInfo;
+        }
+
+        function renderOnlyUpDownReticle(mkt, reticle, eyebrow, label, sub) {
+            const res = evaluateOnlyUpDown(mkt, state.windowSize);
+            if (!res) {
+                reticle.classList.remove("acquired");
+                eyebrow.textContent = "Watching";
+                eyebrow.classList.remove("acquired");
+                label.className = "ret-label idle";
+                label.textContent = "Collecting ticks…";
+                sub.textContent = `Only Ups/Downs needs at least ${OU.MIN_TICKS} ticks — ${mkt.quotes.length} so far.`;
+                return;
+            }
+
+            const tier = tierFor(res);
+            const streakTxt = res.meta.currentStreakDir
+                ? `${res.meta.currentStreakLen} ${res.meta.currentStreakDir} in a row`
+                : "flat";
+
+            if (!tier) {
+                reticle.classList.remove("acquired");
+                eyebrow.textContent = "Watching";
+                eyebrow.classList.remove("acquired");
+                label.className = "ret-label idle";
+                label.textContent = "No streak edge";
+                sub.textContent = `P(up)/tick=${(res.meta.pUp*100).toFixed(1)}% · ×${res.meta.advantage.toFixed(2)} vs baseline · streak: ${streakTxt}`;
+                return;
+            }
+
+            reticle.classList.add("acquired");
+            eyebrow.textContent = "Target acquired";
+            eyebrow.classList.add("acquired");
+            label.className = "ret-label " + res.direction;
+            label.textContent = res.label;
+
+            setConfidenceLine("retConfidenceLine", sub,
+                `<b>${res.confidence}%</b> confidence &middot; ${tier} &middot; ${res.meta.duration}-tick run`);
+            sub.textContent = `P(up)/tick=${(res.meta.pUp*100).toFixed(1)}% · ×${res.meta.advantage.toFixed(2)} vs baseline · streak: ${streakTxt}`;
+        }
+
+        function drawDigitHistogram(canvas, mkt, opts) {
             const ctx = canvas.getContext("2d");
             const w = canvas.width, h = canvas.height;
             ctx.clearRect(0, 0, w, h);
 
-            const digits = mkt.digits.slice(-state.windowSize);
+            const win = (opts && opts.window) || state.windowSize;
+            const digits = mkt.digits.slice(-win);
             const counts = new Array(10).fill(0);
             digits.forEach(d => counts[d]++);
             const n = digits.length || 1;
@@ -2260,6 +2643,8 @@
             const expectedY = h - 18 - (n * 0.1 * (h - 30)) / maxCount;
 
             const barW = (w - 20) / 10;
+
+            // Baseline (uniform expectation)
             ctx.strokeStyle = "#2a3b4d";
             ctx.setLineDash([3, 3]);
             ctx.beginPath();
@@ -2268,17 +2653,41 @@
             ctx.stroke();
             ctx.setLineDash([]);
 
+            const barrier = opts ? opts.barrier : null;
+            const modeDigit = opts ? opts.modeDigit : null;
+            const direction = opts ? opts.direction : null;
+
             counts.forEach((c, d) => {
                 const barH = ((h - 30) * c) / maxCount;
                 const x = 10 + d * barW;
                 const y = h - 18 - barH;
-                ctx.fillStyle = d === mkt.lastDigit ? "#ffb454" : "#233042";
+                let fill = "#233042";
+                if (barrier != null && direction === "up" && d > barrier) fill = "rgba(62,207,142,0.35)";
+                else if (barrier != null && direction === "down" && d < barrier) fill = "rgba(255,93,93,0.35)";
+                if (d === modeDigit && modeDigit != null) fill = "#ffb454";
+                else if (d === mkt.lastDigit && modeDigit == null) fill = "#ffb454";
+                ctx.fillStyle = fill;
                 ctx.fillRect(x + 3, y, barW - 6, barH);
                 ctx.fillStyle = "#7891a3";
                 ctx.font = "10px 'IBM Plex Mono', monospace";
                 ctx.textAlign = "center";
                 ctx.fillText(String(d), x + barW / 2, h - 5);
             });
+
+            // Barrier line marker
+            if (barrier != null) {
+                const bx = 10 + (barrier + 1) * barW;
+                ctx.strokeStyle = "rgba(255,180,84,0.8)";
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(bx, 4);
+                ctx.lineTo(bx, h - 18);
+                ctx.stroke();
+                ctx.fillStyle = "#ffb454";
+                ctx.font = "9px 'IBM Plex Mono', monospace";
+                ctx.textAlign = "center";
+                ctx.fillText("bar", bx, 14);
+            }
         }
 
         function drawPriceLine(canvas, quotes) {
@@ -2305,7 +2714,6 @@
             const stroke = rising ? "#3ecf8e" : "#ff5d5d";
             const fillTop = rising ? "rgba(62,207,142,0.14)" : "rgba(255,93,93,0.14)";
 
-            // area fill
             ctx.beginPath();
             ctx.moveTo(xAt(0), h - pad);
             quotes.forEach((v, i) => ctx.lineTo(xAt(i), yAt(v)));
@@ -2314,7 +2722,6 @@
             ctx.fillStyle = fillTop;
             ctx.fill();
 
-            // line
             ctx.beginPath();
             quotes.forEach((v, i) => {
                 if (i === 0) ctx.moveTo(xAt(i), yAt(v));
@@ -2325,7 +2732,6 @@
             ctx.lineJoin = "round";
             ctx.stroke();
 
-            // last point
             const lx = xAt(quotes.length - 1), ly = yAt(quotes[quotes.length - 1]);
             ctx.beginPath();
             ctx.arc(lx, ly, 3, 0, Math.PI * 2);
@@ -2358,25 +2764,119 @@
             ).join("");
         }
 
+        function renderHighLowConditions(mkt) {
+            const list = document.getElementById("highLowCondList");
+            const res = evaluateHighLow(mkt, state.windowSize);
+            if (!res) {
+                list.innerHTML = `<div style="color:var(--faint);font-size:12px;padding:8px 0;">Collecting ticks — ${mkt.digits.length}/${HL.MIN_TICKS} minimum.</div>`;
+                return;
+            }
+            const m = res.meta;
+            const basePctHigh = (m.baseHigh * 100).toFixed(1);
+            const basePctLow  = (m.baseLow  * 100).toFixed(1);
+            const rows = [
+                { k: "Window",              v: state.highLowWindow + " ticks", cls: "neutral" },
+                { k: "Barrier digit",       v: String(m.barrier), cls: "warn" },
+                { k: "Prediction digit",    v: String(m.predictedDigit) + ` (${m.modeCount}×)`, cls: "warn" },
+                { k: "Side",                v: m.sideLabel, cls: res.direction === "up" ? "up" : "down" },
+                { k: "Digits > barrier",    v: String(m.above), cls: "neutral" },
+                { k: "Digits < barrier",    v: String(m.below), cls: "neutral" },
+                { k: "P(high)",             v: (m.pHigh * 100).toFixed(1) + "%", cls: m.pHigh > m.baseHigh ? "up" : "neutral" },
+                { k: "P(low)",              v: (m.pLow  * 100).toFixed(1) + "%", cls: m.pLow  > m.baseLow  ? "down" : "neutral" },
+                { k: "Baseline (high)",     v: basePctHigh + "%", cls: "neutral" },
+                { k: "Baseline (low)",      v: basePctLow + "%", cls: "neutral" },
+                { k: "Wilson z",            v: res.z.toFixed(2), cls: res.z > 0 ? "up" : "down" },
+                { k: "Best read",           v: res.label, cls: "warn" }
+            ];
+            list.innerHTML = rows.map(r =>
+                `<div class="cond-row"><span class="cond-k">${r.k}</span><span class="cond-v ${r.cls}">${r.v}</span></div>`
+            ).join("");
+        }
+
+        function renderOnlyUpDownConditions(mkt) {
+            const list = document.getElementById("onlyUpDownCondList");
+            const res = evaluateOnlyUpDown(mkt, state.windowSize);
+            if (!res) {
+                list.innerHTML = `<div style="color:var(--faint);font-size:12px;padding:8px 0;">Collecting ticks — ${mkt.quotes.length}/${OU.MIN_TICKS} minimum.</div>`;
+                return;
+            }
+            const m = res.meta;
+            const baselinePct = (m.baseline * 100).toFixed(3);
+            const streakTxt = m.currentStreakDir
+                ? `${m.currentStreakLen} ${m.currentStreakDir}`
+                : "flat";
+            const rows = [
+                { k: "Duration",        v: m.duration + " ticks", cls: "neutral" },
+                { k: "Lookback",        v: m.total + " ticks", cls: "neutral" },
+                { k: "Up ticks",        v: m.ups,   cls: "up" },
+                { k: "Down ticks",      v: m.downs, cls: "down" },
+                { k: "P(up) / tick",    v: (m.pUp * 100).toFixed(1) + "%", cls: m.pUp > 0.5 ? "up" : "neutral" },
+                { k: "P(down) / tick",  v: (m.pDown * 100).toFixed(1) + "%", cls: m.pDown > 0.5 ? "down" : "neutral" },
+                { k: "P(only ups)",     v: (m.pOnlyUps * 100).toFixed(3) + "%",   cls: m.isUps ? "up" : "neutral" },
+                { k: "P(only downs)",   v: (m.pOnlyDowns * 100).toFixed(3) + "%", cls: !m.isUps ? "down" : "neutral" },
+                { k: "Baseline 0.5^N",  v: baselinePct + "%", cls: "neutral" },
+                { k: "Advantage",       v: "×" + m.advantage.toFixed(2), cls: "warn" },
+                { k: "Current streak",  v: streakTxt, cls: m.currentStreakDir === "up" ? "up" : m.currentStreakDir === "down" ? "down" : "neutral" },
+                { k: "Best read",       v: m.isUps ? "ONLY UPS" : "ONLY DOWNS", cls: "warn" }
+            ];
+            list.innerHTML = rows.map(r =>
+                `<div class="cond-row"><span class="cond-k">${r.k}</span><span class="cond-v ${r.cls}">${r.v}</span></div>`
+            ).join("");
+        }
+
         function renderMarketDetail() {
             const mkt = currentMarket();
             const isRF = state.activeTab === "risefall";
+            const isHL = state.activeTab === "highlow";
+            const isOU = state.activeTab === "onlyupdown";
             const canvas = document.getElementById("histCanvas");
             const titleEl = document.getElementById("detailChartTitle");
             const digitDetail = document.getElementById("digitDetail");
             const rfDetail = document.getElementById("rfDetail");
+            const hlDetail = document.getElementById("highLowDetail");
+            const ouDetail = document.getElementById("onlyUpDownDetail");
 
             if (isRF) {
                 const n = Math.min(mkt.quotes.length, state.windowSize);
                 titleEl.textContent = `Price sequence — last ${n} ticks`;
                 digitDetail.style.display = "none";
                 rfDetail.style.display = "block";
+                hlDetail.style.display = "none";
+                ouDetail.style.display = "none";
                 drawPriceLine(canvas, mkt.quotes.slice(-state.windowSize));
                 renderConditions(mkt);
+            } else if (isHL) {
+                const res = evaluateHighLow(mkt, state.windowSize);
+                const barrier = res ? res.meta.barrier : null;
+                const modeDigit = res ? res.meta.predictedDigit : null;
+                const direction = res ? res.direction : null;
+                titleEl.textContent = `Digit distribution + barrier — last ${state.highLowWindow} ticks`;
+                digitDetail.style.display = "none";
+                rfDetail.style.display = "none";
+                hlDetail.style.display = "block";
+                ouDetail.style.display = "none";
+                drawDigitHistogram(canvas, mkt, {
+                    window: state.highLowWindow,
+                    barrier,
+                    modeDigit,
+                    direction
+                });
+                renderHighLowConditions(mkt);
+            } else if (isOU) {
+                const n = Math.min(mkt.quotes.length, state.windowSize);
+                titleEl.textContent = `Price sequence — last ${n} ticks`;
+                digitDetail.style.display = "none";
+                rfDetail.style.display = "none";
+                hlDetail.style.display = "none";
+                ouDetail.style.display = "block";
+                drawPriceLine(canvas, mkt.quotes.slice(-state.windowSize));
+                renderOnlyUpDownConditions(mkt);
             } else {
                 titleEl.textContent = `Digit distribution — last ${state.windowSize} ticks`;
                 digitDetail.style.display = "block";
                 rfDetail.style.display = "none";
+                hlDetail.style.display = "none";
+                ouDetail.style.display = "none";
                 drawDigitHistogram(canvas, mkt);
 
                 document.getElementById("streakLine").textContent = mkt.streak.dir
@@ -2474,7 +2974,6 @@
             return `Collecting ticks — ${mkt.digits.length}/${need} minimum`;
         }
 
-        /* ---- Cross-market scan ---- */
         function scanAllMarkets(windowSize) {
             const out = [];
             markets.forEach(mkt => {
@@ -2617,7 +3116,6 @@
             simInterval = setInterval(() => {
                 markets.forEach((mkt, code) => {
                     const prev = walkState.get(code);
-                    // slight momentum bias so rise/fall has something to read
                     const drift = (Math.random() - 0.5) * prev * 0.00012;
                     const step = (Math.random() - 0.5) * prev * 0.0009 + drift;
                     const next = Math.max(0.001, prev + step);
@@ -2658,7 +3156,7 @@
         });
 
         document.getElementById("ensembleSwitch").addEventListener("click", () => {
-            if (state.activeTab === "risefall") return;
+            if (state.activeTab === "risefall" || state.activeTab === "highlow" || state.activeTab === "onlyupdown") return;
             const sw = document.getElementById("ensembleSwitch");
             state.ensemble = !state.ensemble;
             sw.classList.toggle("on", state.ensemble);
@@ -2671,6 +3169,11 @@
                 document.querySelectorAll("#categoryTabs .tab").forEach(t => t.classList.remove("active"));
                 e.target.classList.add("active");
                 state.activeTab = e.target.dataset.cat;
+                const isHL = state.activeTab === "highlow";
+                const isOU = state.activeTab === "onlyupdown";
+                document.getElementById("windowPicker").style.display     = (isHL || isOU) ? "none" : "flex";
+                document.getElementById("highLowPicker").style.display    = isHL ? "flex" : "none";
+                document.getElementById("onlyUpDownPicker").style.display = isOU ? "flex" : "none";
                 renderSignalsPanel();
                 renderMarketDetail();
             }
@@ -2686,6 +3189,32 @@
             }
         });
 
+        document.getElementById("highLowPicker").addEventListener("click", e => {
+            if (!e.target.classList.contains("wbtn")) return;
+            if (e.target.dataset.hlw) {
+                document.querySelectorAll("#highLowPicker .wbtn[data-hlw]").forEach(b => b.classList.remove("active"));
+                e.target.classList.add("active");
+                state.highLowWindow = parseInt(e.target.dataset.hlw, 10);
+            } else if (e.target.dataset.bar) {
+                document.querySelectorAll("#highLowPicker .wbtn[data-bar]").forEach(b => b.classList.remove("active"));
+                e.target.classList.add("active");
+                state.highLowBarrier = e.target.dataset.bar === "auto"
+                    ? "auto"
+                    : parseInt(e.target.dataset.bar, 10);
+            }
+            renderSignalsPanel();
+            renderMarketDetail();
+        });
+
+        document.getElementById("onlyUpDownPicker").addEventListener("click", e => {
+            if (!e.target.classList.contains("wbtn")) return;
+            document.querySelectorAll("#onlyUpDownPicker .wbtn").forEach(b => b.classList.remove("active"));
+            e.target.classList.add("active");
+            state.onlyUpDownDuration = parseInt(e.target.dataset.dur, 10);
+            renderSignalsPanel();
+            renderMarketDetail();
+        });
+
         document.getElementById("aiWindowPicker").addEventListener("click", e => {
             if (e.target.classList.contains("wbtn")) {
                 document.querySelectorAll("#aiWindowPicker .wbtn").forEach(b => b.classList.remove("active"));
@@ -2698,7 +3227,7 @@
             radio.addEventListener("change", () => {
                 state.threshold = parseFloat(radio.value);
                 if (state.aiScanning) renderAIScan();
-                if (state.activeTab !== "risefall") renderSignalsPanel();
+                if (state.activeTab !== "risefall" && state.activeTab !== "onlyupdown") renderSignalsPanel();
             });
         });
 
@@ -2751,7 +3280,7 @@
             resizeTimer = setTimeout(() => { renderMarketDetail(); }, 200);
         });
 
-        console.log("EMRON PULSE — Rise/Fall integrated. Engine initialized.");
+        console.log("EMRON PULSE — High/Low barrier-digit engine active.");
     })();
 </script>
 </body>
