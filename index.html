@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>EMRON PULSE — Rise/Fall + Digit Signal Scanner</title>
+    <title>EMRON PULSE — Dollar Printer Matches + Signal Scanner</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1196,7 +1196,7 @@
                 <div class="panel-head">
                     <div>
                         <h2 id="signalsHeading">Rise / Fall readout</h2>
-                        <p id="signalsSub">Reads the last <span id="windowLabelText">100</span> ticks of the price sequence — momentum, structure, trend and regime must agree before a call is confirmed.</p>
+                        <p id="signalsSub">Reads the selected strategy using the live tick stream. Matches uses the Dollar Printer staged rules across every tracked market.</p>
                     </div>
                     <div class="switch" id="ensembleSwitch" role="button" tabindex="0">
                         <span>Smoothed</span>
@@ -1207,7 +1207,7 @@
                     <button class="tab rf active" data-cat="risefall">Rise / Fall</button>
                     <button class="tab" data-cat="evenodd">Even / Odd</button>
                     <button class="tab" data-cat="overunder">Over / Under</button>
-                    <button class="tab" data-cat="matchdiffer">Matches / Differs</button>
+                    <button class="tab" data-cat="matchdiffer">Matches</button>
                     <button class="tab" data-cat="highlow">High Tick / Low Tick</button>
                     <button class="tab" data-cat="onlyupdown">Only Ups / Only Downs</button>
                 </div>
@@ -1262,6 +1262,10 @@
                             <h3 style="margin-top:16px;">Recent tape</h3>
                             <div class="tape" id="tickTape"></div>
                         </div>
+                        <div id="matchesDetail" style="display:none;">
+                            <h3>Matches rule state</h3>
+                            <div class="cond-list" id="matchesCondList"></div>
+                        </div>
                         <div id="rfDetail">
                             <h3>Condition checklist</h3>
                             <div class="cond-list" id="condList"></div>
@@ -1284,7 +1288,7 @@
                 <div class="panel-head">
                     <div>
                         <h2>Cross-market scan</h2>
-                        <p>Scores every tracked market across all six strategies and surfaces the single strongest read.</p>
+                        <p>Scans every tracked market continuously. In Matches mode, every market runs the Dollar Printer sequence independently and the signal fires as soon as one completes all entry conditions.</p>
                     </div>
                 </div>
                 <div class="window-picker" id="aiWindowPicker">
@@ -1362,7 +1366,7 @@
             <path d="M12 2L2 7v6c0 5.25 3.75 9.74 10 11 6.25-1.26 10-5.75 10-11V7l-10-5z" stroke="#4a5b6b" stroke-width="1.4"/>
             <path d="M12 8v5M12 16.5v.01" stroke="#4a5b6b" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
-        <p>Every number on this page is computed client-side from Deriv's public tick stream. Digit strategies use a z-score against the actual observed frequency; Rise/Fall uses price momentum, market structure, trend and a regime filter; High Tick / Low Tick compares the last-digit distribution to a barrier digit; Only Ups / Only Downs estimates the consecutive-run probability. Percentages are <em>model confidence</em>, not historical accuracy — the only true hit rate shown is the Rise/Fall performance panel, which counts real resolved outcomes. Past ticks carry no memory of future ones. Trade within your own risk tolerance.</p>
+        <p>Every number on this page is computed client-side from Deriv's public tick stream. Matches mode uses the staged Dollar Printer rules: dominant digit at 12% or higher and rising, second-most increasing digit among the top three as the prediction, three consecutive ticks from the opposite range, then a touch of the least-appearing digit followed by the dominant digit. The other strategy tabs retain their existing statistical engines. Signal completion is rule-based and is not a guarantee of future results. Trade within your own risk tolerance.</p>
     </div>
 
     <div id="infoModal">
@@ -1375,9 +1379,17 @@
                 <li><strong>Rise / Fall:</strong> Directional read on the price sequence — 5/10/20-tick momentum, higher highs &amp; higher lows, short and medium trend, momentum acceleration, and a choppy-regime filter</li>
                 <li><strong>Even/Odd:</strong> Bias toward even or odd last digits</li>
                 <li><strong>Over/Under:</strong> Bias toward digits ≥5 or &lt;5</li>
-                <li><strong>Matches/Differs:</strong> Bias toward repeated digits or avoidance of repeats</li>
+                <li><strong>Matches:</strong> Dollar Printer sequence — top-three distribution, dominant digit ≥12% and rising, second-most increasing top-three digit as prediction, three opposite-range ticks, least-digit touch, then dominant-digit touch to trigger the Match signal.</li>
                 <li><strong>High Tick / Low Tick:</strong> Compares the last-digit distribution against a barrier digit (auto-selected or fixed). Predicts whether the next last digit will land <em>above</em> the barrier (HIGH TICK) or <em>below</em> it (LOW TICK). Uses a Jeffreys-smoothed proportion test against the fair baseline for that barrier.</li>
                 <li><strong>Only Ups / Only Downs:</strong> Estimates the per-tick up/down bias and compares the probability of a full N-tick consecutive run against the fair-coin baseline of 0.5<sup>N</sup>.</li>
+            </ul>
+            <p><strong>Matches rule details:</strong></p>
+            <ul>
+                <li>Uses the most recent 100 digits for the live distribution.</li>
+                <li>Rising is measured against the same-size window shifted 20 ticks backward.</li>
+                <li>The three highest current-percentage digits are ranked by percentage gain; the second-highest gainer becomes the Match prediction.</li>
+                <li>For a dominant digit 0–4, the opposite range is 5–9; for a dominant digit 5–9, the opposite range is 0–4.</li>
+                <li>After 3 consecutive opposite-range ticks, the setup is frozen and the engine waits for the least-appearing digit, then the dominant digit.</li>
             </ul>
             <p><strong>Statistics:</strong></p>
             <ul>
@@ -1407,6 +1419,9 @@
            Digit cats  : Wilson-adjusted z, multi-scale ensemble, regime filter
            High/Low    : barrier-digit vs last-digit distribution (z-tested)
            Only Ups/Dn : consecutive-run probability vs 0.5^N baseline
+           Matches     : Dollar Printer staged sequence — 12%+ rising leader,
+                         top-three gain ranking, opposite-range run, least touch,
+                         dominant touch, then second-gainer Match prediction
            Shared      : confirmation persistence, cooldown, decay, logging
            -------------------------------------------------------------- */
 
@@ -1440,7 +1455,7 @@
             risefall: "Rise / Fall",
             evenodd: "Even / Odd",
             overunder: "Over / Under",
-            matchdiffer: "Matches / Differs",
+            matchdiffer: "Matches",
             highlow: "High Tick / Low Tick",
             onlyupdown: "Only Ups / Only Downs"
         };
@@ -1474,6 +1489,18 @@
             MIN_SCORE: 0.30
         };
 
+        /* Dollar Printer Matches strategy — derived from the supplied rules */
+        const MATCHES = {
+            WINDOW: 100,
+            RISE_SHIFT: 20,
+            MIN_TICKS: 120,
+            MIN_LEADER_PCT: 12.0,
+            TOP_COUNT: 3,
+            OPPOSITE_RUN: 3,
+            MAX_SETUP_WAIT: 35,
+            CONFIRM_DISPLAY_TICKS: 1
+        };
+
         const state = {
             connection: "connecting",
             reconnectAttempts: 0,
@@ -1482,7 +1509,7 @@
             ensemble: false,
             windowSize: 100,
             aiWindowSize: 100,
-            aiScanning: false,
+            aiScanning: true,
             aiTimer: null,
             soundEnabled: true,
             bannerDismissed: false,
@@ -1508,7 +1535,15 @@
                 tickCount: 0,
                 lastQuote: null,
                 lastDigit: null,
-                streak: { dir: null, len: 0 }
+                streak: { dir: null, len: 0 },
+                matches: {
+                    stage: "watching",
+                    oppositeRun: 0,
+                    stageTicks: 0,
+                    setup: null,
+                    lastSignal: null,
+                    lastSignalTick: -Infinity
+                }
             });
             state.symbolStrengthHistory.set(s.code, []);
         });
@@ -1586,42 +1621,298 @@
                     z, absZ: Math.abs(z), n: digits.length
                 };
             } else if (category === "matchdiffer") {
-                if (digits.length < 10) return null;
-                const counts = new Array(10).fill(0);
-                digits.forEach(d => counts[d]++);
-                const expected = digits.length / 10;
-                let dueDigit = 0, maxDef = -Infinity;
-                for (let d = 0; d < 10; d++) {
-                    const def = expected - counts[d];
-                    if (def > maxDef) { maxDef = def; dueDigit = d; }
-                }
-                const dueSd = Math.sqrt(expected * 0.9) || 1;
-                const zMatch = (expected - counts[dueDigit]) / dueSd;
-                let repeats = 0;
-                for (let i = 1; i < digits.length; i++) {
-                    if (digits[i] === digits[i - 1]) repeats++;
-                }
-                const zRepeat = wilsonZ(repeats, digits.length - 1, 0.1);
-                const zDiffer = -zRepeat;
-                if (Math.abs(zMatch) >= Math.abs(zDiffer)) {
-                    result = {
-                        category,
-                        label: `MATCHES ${dueDigit}`,
-                        direction: "up",
-                        z: zMatch, absZ: Math.abs(zMatch), n: digits.length,
-                        sub: "due-digit"
-                    };
-                } else {
-                    result = {
-                        category,
-                        label: `DIFFERS ${digits[digits.length - 1]}`,
-                        direction: "down",
-                        z: zDiffer, absZ: Math.abs(zDiffer), n: digits.length,
-                        sub: "repeat-avoid"
-                    };
-                }
+                /* The live staged Dollar Printer engine is stateful and is stepped
+                   once per tick from updateConfirmations(). This read-only branch
+                   returns its current status for the UI. */
+                return evaluateMatchesStatus(mkt);
             }
             return result;
+        }
+
+
+        /* ==== DOLLAR PRINTER MATCHES ENGINE ==== */
+
+        function getMatchesDistribution(mkt) {
+            const all = mkt.digits;
+            const win = MATCHES.WINDOW;
+            const shift = MATCHES.RISE_SHIFT;
+            if (all.length < MATCHES.MIN_TICKS) return null;
+
+            const current = all.slice(-win);
+            const priorEnd = all.length - shift;
+            const priorStart = priorEnd - win;
+            if (priorStart < 0) return null;
+            const prior = all.slice(priorStart, priorEnd);
+
+            const counts = new Array(10).fill(0);
+            const priorCounts = new Array(10).fill(0);
+            current.forEach(d => counts[d]++);
+            prior.forEach(d => priorCounts[d]++);
+
+            const n = current.length;
+            const rows = [];
+            for (let d = 0; d < 10; d++) {
+                const pct = counts[d] * 100 / n;
+                const prevPct = priorCounts[d] * 100 / n;
+                rows.push({
+                    digit: d,
+                    count: counts[d],
+                    pct,
+                    prevPct,
+                    gain: pct - prevPct
+                });
+            }
+
+            const byPct = rows.slice().sort((a, b) =>
+                (b.pct - a.pct) || (b.gain - a.gain) || (a.digit - b.digit)
+            );
+
+            const top3 = byPct.slice(0, MATCHES.TOP_COUNT);
+            const top3ByGain = top3.slice().sort((a, b) =>
+                (b.gain - a.gain) || (b.pct - a.pct) || (a.digit - b.digit)
+            );
+
+            const leader = byPct[0];
+            const least = rows.slice().sort((a, b) =>
+                (a.pct - b.pct) || (a.gain - b.gain) || (a.digit - b.digit)
+            )[0];
+
+            const prediction = top3ByGain[1] || top3ByGain[0] || null;
+            const leaderRising = leader ? leader.gain > 0 : false;
+            const leaderValid = !!leader && leader.pct >= MATCHES.MIN_LEADER_PCT && leaderRising;
+
+            return {
+                n,
+                counts,
+                rows,
+                byPct,
+                top3,
+                top3ByGain,
+                leader,
+                least,
+                prediction,
+                leaderValid
+            };
+        }
+
+        function matchesOppositeRange(digit, dominantDigit) {
+            if (dominantDigit == null || digit == null) return false;
+            return dominantDigit <= 4 ? digit >= 5 : digit <= 4;
+        }
+
+        function resetMatchesState(mkt, reason = "watching") {
+            mkt.matches.stage = reason;
+            mkt.matches.oppositeRun = 0;
+            mkt.matches.stageTicks = 0;
+            mkt.matches.setup = null;
+        }
+
+        function startMatchesRun(mkt, dist) {
+            mkt.matches.stage = "opposite_run";
+            mkt.matches.oppositeRun = 0;
+            mkt.matches.stageTicks = 0;
+            mkt.matches.setup = null;
+        }
+
+        function freezeMatchesSetup(mkt, dist) {
+            const prediction = dist.prediction;
+            mkt.matches.setup = {
+                dominantDigit: dist.leader.digit,
+                dominantPct: dist.leader.pct,
+                dominantGain: dist.leader.gain,
+                leastDigit: dist.least.digit,
+                leastPct: dist.least.pct,
+                predictionDigit: prediction ? prediction.digit : null,
+                predictionPct: prediction ? prediction.pct : null,
+                predictionGain: prediction ? prediction.gain : null,
+                top3: dist.top3.map(x => ({
+                    digit: x.digit,
+                    pct: x.pct,
+                    gain: x.gain
+                })),
+                frozenAtTick: mkt.tickCount
+            };
+        }
+
+        function stepMatchesEngine(mkt) {
+            const dist = getMatchesDistribution(mkt);
+            const st = mkt.matches;
+
+            if (!dist || !dist.leader || !dist.prediction) {
+                resetMatchesState(mkt, "collecting");
+                return null;
+            }
+
+            /* Before the 3-tick confirmation run, the setup must remain valid. */
+            if (st.stage === "watching" || st.stage === "collecting") {
+                if (!dist.leaderValid) {
+                    st.stage = "watching";
+                    st.oppositeRun = 0;
+                    st.stageTicks = 0;
+                    st.setup = null;
+                    return null;
+                }
+                startMatchesRun(mkt, dist);
+            }
+
+            if (st.stage === "opposite_run") {
+                if (!matchesOppositeRange(mkt.lastDigit, dist.leader.digit)) {
+                    st.oppositeRun = 0;
+                    st.stageTicks = 0;
+                    return null;
+                }
+
+                st.oppositeRun += 1;
+                st.stageTicks += 1;
+
+                if (st.oppositeRun >= MATCHES.OPPOSITE_RUN) {
+                    freezeMatchesSetup(mkt, dist);
+                    st.stage = "wait_least";
+                    st.stageTicks = 0;
+                }
+                return null;
+            }
+
+            if (st.stage === "wait_least") {
+                st.stageTicks += 1;
+                if (st.stageTicks > MATCHES.MAX_SETUP_WAIT) {
+                    resetMatchesState(mkt, "watching");
+                    return null;
+                }
+
+                if (mkt.lastDigit === st.setup.leastDigit) {
+                    st.stage = "wait_dominant";
+                    st.stageTicks = 0;
+                }
+                return null;
+            }
+
+            if (st.stage === "wait_dominant") {
+                st.stageTicks += 1;
+                if (st.stageTicks > MATCHES.MAX_SETUP_WAIT) {
+                    resetMatchesState(mkt, "watching");
+                    return null;
+                }
+
+                if (mkt.lastDigit === st.setup.dominantDigit) {
+                    const signal = {
+                        category: "matchdiffer",
+                        label: `MATCHES ${st.setup.predictionDigit}`,
+                        direction: "up",
+                        score: 1,
+                        absScore: 1,
+                        strength: 1,
+                        confidence: 100,
+                        n: MATCHES.WINDOW,
+                        meta: {
+                            readyToSignal: true,
+                            predictionDigit: st.setup.predictionDigit,
+                            dominantDigit: st.setup.dominantDigit,
+                            dominantPct: st.setup.dominantPct,
+                            dominantGain: st.setup.dominantGain,
+                            leastDigit: st.setup.leastDigit,
+                            leastPct: st.setup.leastPct,
+                            top3: st.setup.top3,
+                            oppositeRun: MATCHES.OPPOSITE_RUN,
+                            ruleComplete: true
+                        }
+                    };
+
+                    st.lastSignal = {
+                        tick: mkt.tickCount,
+                        ...signal.meta
+                    };
+                    st.lastSignalTick = mkt.tickCount;
+                    resetMatchesState(mkt, "watching");
+                    return signal;
+                }
+            }
+
+            return null;
+        }
+
+        function evaluateMatchesStatus(mkt) {
+            const dist = getMatchesDistribution(mkt);
+            const st = mkt.matches;
+            const signalJustFired = st.lastSignal && (mkt.tickCount - st.lastSignalTick <= MATCHES.CONFIRM_DISPLAY_TICKS);
+
+            if (signalJustFired) {
+                return {
+                    category: "matchdiffer",
+                    label: `MATCHES ${st.lastSignal.predictionDigit}`,
+                    direction: "up",
+                    score: 1,
+                    absScore: 1,
+                    strength: 1,
+                    confidence: 100,
+                    n: MATCHES.WINDOW,
+                    meta: {
+                        readyToSignal: true,
+                        signalJustFired: true,
+                        predictionDigit: st.lastSignal.predictionDigit,
+                        dominantDigit: st.lastSignal.dominantDigit,
+                        dominantPct: st.lastSignal.dominantPct,
+                        dominantGain: st.lastSignal.dominantGain,
+                        leastDigit: st.lastSignal.leastDigit,
+                        leastPct: st.lastSignal.leastPct,
+                        top3: st.lastSignal.top3,
+                        oppositeRun: MATCHES.OPPOSITE_RUN,
+                        ruleComplete: true
+                    }
+                };
+            }
+
+            const meta = dist ? {
+                readyToSignal: false,
+                stage: st.stage,
+                oppositeRun: st.oppositeRun,
+                predictionDigit: st.setup ? st.setup.predictionDigit : (dist.prediction ? dist.prediction.digit : null),
+                dominantDigit: st.setup ? st.setup.dominantDigit : (dist.leader ? dist.leader.digit : null),
+                dominantPct: st.setup ? st.setup.dominantPct : (dist.leader ? dist.leader.pct : 0),
+                dominantGain: st.setup ? st.setup.dominantGain : (dist.leader ? dist.leader.gain : 0),
+                leastDigit: st.setup ? st.setup.leastDigit : (dist.least ? dist.least.digit : null),
+                leastPct: st.setup ? st.setup.leastPct : (dist.least ? dist.least.pct : 0),
+                top3: st.setup ? st.setup.top3 : (dist.top3 || []).map(x => ({
+                    digit: x.digit,
+                    pct: x.pct,
+                    gain: x.gain
+                })),
+                oppositeRange: (st.setup ? st.setup.dominantDigit : dist.leader.digit) <= 4 ? "5–9" : "0–4",
+                leaderValid: dist.leaderValid
+            } : {
+                readyToSignal: false,
+                stage: "collecting",
+                oppositeRun: 0,
+                predictionDigit: null,
+                dominantDigit: null,
+                dominantPct: 0,
+                dominantGain: 0,
+                leastDigit: null,
+                leastPct: 0,
+                top3: [],
+                oppositeRange: "—",
+                leaderValid: false
+            };
+
+            const hasData = !!dist;
+            const label = meta.readyToSignal
+                ? `MATCHES ${meta.predictionDigit}`
+                : "WATCHING MATCH RULE";
+
+            return {
+                category: "matchdiffer",
+                label,
+                direction: "up",
+                score: 0,
+                absScore: 0,
+                strength: 0,
+                confidence: meta.readyToSignal ? 100 : 0,
+                n: dist ? dist.n : 0,
+                meta: {
+                    ...meta,
+                    hasData
+                }
+            };
         }
 
         /* ==== RISE / FALL ENGINE ==== */
@@ -2006,6 +2297,9 @@
                 if (s >= 0.30) return "weak";
                 return null;
             }
+            if (result.category === "matchdiffer") {
+                return result.meta && result.meta.readyToSignal ? "rule complete" : null;
+            }
             // highlow behaves like a digit strategy → use z
             const z = result.absZ;
             if (z >= 2.75) return "very strong";
@@ -2026,11 +2320,15 @@
             if (result.category === "onlyupdown") {
                 return result.absScore >= OU.MIN_SCORE;
             }
+            if (result.category === "matchdiffer") {
+                return !!(result.meta && result.meta.readyToSignal);
+            }
             return result.absZ >= state.threshold;
         }
 
         function confidenceOf(result) {
             if (!result) return 0;
+            if (result.category === "matchdiffer") return result.meta && result.meta.readyToSignal ? 100 : 0;
             if (result.category === "risefall" || result.category === "onlyupdown") return result.confidence;
             return confidenceFromZ(result.absZ);
         }
@@ -2106,6 +2404,15 @@
                 const isOver = digit >= 5;
                 return entry.label === "OVER" ? isOver : !isOver;
             }
+            if (entry.category === "matchdiffer") {
+                const target = entry.matchMeta && Number.isInteger(entry.matchMeta.predictionDigit)
+                    ? entry.matchMeta.predictionDigit
+                    : (() => {
+                        const m = entry.label.match(/(\d)$/);
+                        return m ? parseInt(m[1], 10) : null;
+                    })();
+                return target === null ? false : digit === target;
+            }
             const m = entry.label.match(/(\d)$/);
             const target = m ? parseInt(m[1], 10) : null;
             if (target === null) return false;
@@ -2122,8 +2429,20 @@
             let resolveAtTick = mkt.tickCount + RESOLVE_AFTER_TICKS;
             let highLowMeta = null;
             let onlyUpDownMeta = null;
+            let matchMeta = null;
 
-            if (result.category === "highlow" && result.meta) {
+            if (result.category === "matchdiffer" && result.meta) {
+                resolveAtTick = mkt.tickCount + 1;
+                matchMeta = {
+                    predictionDigit: result.meta.predictionDigit,
+                    dominantDigit: result.meta.dominantDigit,
+                    leastDigit: result.meta.leastDigit,
+                    dominantPct: result.meta.dominantPct,
+                    dominantGain: result.meta.dominantGain,
+                    top3: result.meta.top3,
+                    oppositeRun: result.meta.oppositeRun
+                };
+            } else if (result.category === "highlow" && result.meta) {
                 resolveAtTick = mkt.tickCount + 1;
                 highLowMeta = {
                     barrier: result.meta.barrier,
@@ -2158,7 +2477,8 @@
                 createdAt: Date.now(),
                 resolveAtTick,
                 highLowMeta,
-                onlyUpDownMeta
+                onlyUpDownMeta,
+                matchMeta
             };
             state.history.unshift(entry);
             if (state.history.length > 40) state.history.pop();
@@ -2220,6 +2540,39 @@
             Object.keys(CATS).forEach(cat => {
                 const key = symbolCode + "|" + cat;
 
+                /* Matches is a stateful sequence and fires immediately when the
+                   final least-digit → dominant-digit condition completes. */
+                if (cat === "matchdiffer") {
+                    const previous = state.activeConfirmations.get(key);
+                    if (previous && previous.confirmTick < mkt.tickCount) {
+                        state.activeConfirmations.delete(key);
+                    }
+
+                    const matchSignal = stepMatchesEngine(mkt);
+
+                    if (matchSignal) {
+                        const entry = {
+                            key,
+                            symbol: symbolCode,
+                            marketName,
+                            category: cat,
+                            label: matchSignal.label,
+                            direction: "up",
+                            confidence: 100,
+                            confirmedAt: Date.now(),
+                            confirmTick: mkt.tickCount,
+                            matchMeta: matchSignal.meta
+                        };
+
+                        state.activeConfirmations.set(key, entry);
+                        state.bannerDismissed = false;
+                        if (state.soundEnabled) playConfirmChime();
+                        logSignal({ ...matchSignal, symbol: symbolCode }, marketName);
+                        renderConfirmationBanner();
+                    }
+                    return;
+                }
+
                 const regimePass = (cat === "risefall" || cat === "highlow" || cat === "onlyupdown") ? true : regimeOK;
 
                 if (!regimePass) {
@@ -2262,7 +2615,8 @@
                         label: evalRaw.label,
                         direction: evalRaw.direction,
                         confidence: confidenceOf(evalRaw),
-                        confirmedAt: Date.now()
+                        confirmedAt: Date.now(),
+                        confirmTick: mkt.tickCount
                     };
                     state.activeConfirmations.set(key, entry);
                     state.bannerDismissed = false;
@@ -2301,6 +2655,15 @@
                 return;
             }
             const latest = active[active.length - 1];
+            if (latest.category === "matchdiffer") {
+                detail.innerHTML = `
+                    <span class="cf-label up">◆ ${latest.label}</span>
+                    on <b>${latest.marketName}</b> · Matches rule complete · next tick tests the predicted digit
+                `;
+                banner.style.display = "flex";
+                return;
+            }
+
             const dirClass = latest.direction === "up" ? "up" : "down";
             let arrow;
             if (latest.category === "highlow") {
@@ -2404,11 +2767,13 @@
             const isRF = state.activeTab === "risefall";
             const isHL = state.activeTab === "highlow";
             const isOU = state.activeTab === "onlyupdown";
+            const isMATCH = state.activeTab === "matchdiffer";
 
             document.getElementById("signalsHeading").textContent =
                 isRF ? "Rise / Fall readout" :
                 isHL ? "High Tick / Low Tick readout" :
                 isOU ? "Only Ups / Only Downs readout" :
+                isMATCH ? "Dollar Printer Matches readout" :
                 "Signal readout";
 
             document.getElementById("signalsSub").innerHTML = isRF
@@ -2417,11 +2782,13 @@
                 ? `Examines the last-digit distribution over the last ${state.highLowWindow} ticks. Compares the observed proportion above (or below) the barrier digit against its fair baseline, and predicts the next tick's last digit as <b>HIGH TICK</b> (above barrier) or <b>LOW TICK</b> (below barrier). Barrier is ${state.highLowBarrier === "auto" ? "auto-selected for the strongest edge" : "fixed at " + state.highLowBarrier}.`
                 : isOU
                 ? `Estimates the per-tick up/down bias from the last ${OU.LOOKBACK} ticks (Jeffreys-smoothed) and compares P(${state.onlyUpDownDuration} consecutive moves) against the fair-coin baseline of 0.5<sup>${state.onlyUpDownDuration}</sup>.`
+                : isMATCH
+                ? `Scans all ${markets.size} tracked markets continuously. Leader must be ≥12% and rising; then 3 opposite-range ticks → least digit touch → dominant digit touch → MATCH signal using the second-most increasing digit among the top three.`
                 : `Reads the last <span id="windowLabelText">${state.windowSize}</span> ticks on the selected market for a statistically significant departure from randomness.`;
 
             document.getElementById("retMarket").textContent = mkt.name;
 
-            const useEnsemble = !isRF && !isHL && !isOU;
+            const useEnsemble = !isRF && !isHL && !isOU && !isMATCH;
             const ensembleSwitch = document.getElementById("ensembleSwitch");
             ensembleSwitch.style.opacity = useEnsemble ? "1" : "0.35";
             ensembleSwitch.style.pointerEvents = useEnsemble ? "auto" : "none";
@@ -2439,16 +2806,31 @@
 
             if (confirmed) {
                 reticle.classList.add("acquired", "confirmed");
-                eyebrow.textContent = "Confirmed — trade now";
+                eyebrow.textContent = confirmed.category === "matchdiffer" ? "MATCH SIGNAL" : "Confirmed — trade now";
                 eyebrow.classList.add("acquired");
                 label.className = "ret-label " + confirmed.direction;
-                label.textContent = (confirmed.direction === "up" ? "↑ " : "↓ ") + confirmed.label;
-                setConfidenceLine("retConfidenceLine", sub,
-                    `<b>${confirmed.confidence}%</b> confidence &middot; held ${CONFIRM_PERSIST}+ ticks straight`);
-                sub.textContent = "This call has stayed consistent across several ticks in a row — the strongest read this scanner produces, still not a guarantee.";
+                label.textContent = confirmed.category === "matchdiffer"
+                    ? "◆ " + confirmed.label
+                    : (confirmed.direction === "up" ? "↑ " : "↓ ") + confirmed.label;
+
+                if (confirmed.category === "matchdiffer") {
+                    const mm = confirmed.matchMeta || {};
+                    setConfidenceLine("retConfidenceLine", sub,
+                        `<b>RULE COMPLETE</b> · dominant ${mm.dominantDigit ?? "—"} · least ${mm.leastDigit ?? "—"} · prediction <b>${mm.predictionDigit ?? "—"}</b>`);
+                    sub.textContent = "The next tick is the Match prediction test.";
+                } else {
+                    setConfidenceLine("retConfidenceLine", sub,
+                        `<b>${confirmed.confidence}%</b> confidence &middot; held ${CONFIRM_PERSIST}+ ticks straight`);
+                    sub.textContent = "This call has stayed consistent across several ticks in a row — the strongest read this scanner produces, still not a guarantee.";
+                }
                 return;
             }
             reticle.classList.remove("confirmed");
+
+            if (isMATCH) {
+                renderMatchesReticle(mkt, reticle, eyebrow, label, sub);
+                return;
+            }
 
             if (isRF) {
                 renderRiseFallReticle(mkt, reticle, eyebrow, label, sub);
@@ -2514,6 +2896,88 @@
             setConfidenceLine("retConfidenceLine", sub,
                 `<b>${confidenceFromZ(result.absZ)}%</b> confidence &middot; ${tier} &middot; ${result.n} ticks`);
             sub.textContent = "";
+        }
+
+
+        function renderMatchesReticle(mkt, reticle, eyebrow, label, sub) {
+            const res = evaluateMatchesStatus(mkt);
+            const meta = res.meta;
+
+            if (!meta.hasData) {
+                reticle.classList.remove("acquired");
+                eyebrow.textContent = "Watching";
+                eyebrow.classList.remove("acquired");
+                label.className = "ret-label idle";
+                label.textContent = "Collecting tick history…";
+                sub.textContent = `Matches needs ${MATCHES.MIN_TICKS} ticks (${mkt.digits.length} available).`;
+                return;
+            }
+
+            if (meta.signalJustFired) {
+                reticle.classList.add("acquired", "confirmed");
+                eyebrow.textContent = "MATCH SIGNAL";
+                eyebrow.classList.add("acquired");
+                label.className = "ret-label up";
+                label.textContent = `◆ MATCHES ${meta.predictionDigit}`;
+                setConfidenceLine("retConfidenceLine", sub,
+                    `<b>RULE COMPLETE</b> · dominant ${meta.dominantDigit} at ${meta.dominantPct.toFixed(1)}% · least ${meta.leastDigit}`);
+                sub.textContent = "The next tick is the prediction test.";
+                return;
+            }
+
+            reticle.classList.remove("confirmed");
+            reticle.classList.remove("acquired");
+
+            const stageLabels = {
+                watching: "Watching leader",
+                collecting: "Collecting",
+                opposite_run: `Opposite range ${meta.oppositeRange}`,
+                wait_least: `Wait for least ${meta.leastDigit}`,
+                wait_dominant: `Wait for dominant ${meta.dominantDigit}`
+            };
+
+            const stage = mkt.matches.stage;
+            const stageText = stageLabels[stage] || "Watching leader";
+
+            if (stage === "opposite_run") {
+                reticle.classList.add("acquired");
+                eyebrow.textContent = "Building entry";
+                eyebrow.classList.add("acquired");
+                label.className = "ret-label";
+                label.textContent = `${mkt.matches.oppositeRun}/${MATCHES.OPPOSITE_RUN} opposite`;
+                setConfidenceLine("retConfidenceLine", sub,
+                    `Leader <b>${meta.dominantDigit}</b> · ${meta.dominantPct.toFixed(1)}% · prediction <b>${meta.predictionDigit}</b>`);
+                sub.textContent = `Next required ticks must stay in ${meta.oppositeRange}.`;
+                return;
+            }
+
+            if (stage === "wait_least" || stage === "wait_dominant") {
+                reticle.classList.add("acquired");
+                eyebrow.textContent = stageText;
+                eyebrow.classList.add("acquired");
+                label.className = "ret-label";
+                label.textContent = stage === "wait_least"
+                    ? `TOUCH ${meta.leastDigit}`
+                    : `TOUCH ${meta.dominantDigit}`;
+                setConfidenceLine("retConfidenceLine", sub,
+                    `Prediction <b>MATCHES ${meta.predictionDigit}</b> · leader ${meta.dominantDigit} · least ${meta.leastDigit}`);
+                sub.textContent = stage === "wait_least"
+                    ? "Least-appearing digit must print before the dominant digit."
+                    : "Dominant digit must print now to fire the Match signal.";
+                return;
+            }
+
+            const validLeader = meta.leaderValid;
+            reticle.classList.toggle("acquired", validLeader);
+            eyebrow.textContent = validLeader ? "Entry conditions forming" : "Watching";
+            eyebrow.classList.toggle("acquired", validLeader);
+            label.className = "ret-label idle";
+            label.textContent = validLeader
+                ? `Leader ${meta.dominantDigit} · ${meta.dominantPct.toFixed(1)}%`
+                : "Leader below 12% or not rising";
+            setConfidenceLine("retConfidenceLine", sub,
+                `Prediction candidate: <b>${meta.predictionDigit ?? "—"}</b> · least: <b>${meta.leastDigit ?? "—"}</b>`);
+            sub.textContent = "Waiting for the 3-tick opposite-range sequence.";
         }
 
         function renderRiseFallReticle(mkt, reticle, eyebrow, label, sub) {
@@ -2627,6 +3091,157 @@
             setConfidenceLine("retConfidenceLine", sub,
                 `<b>${res.confidence}%</b> confidence &middot; ${tier} &middot; ${res.meta.duration}-tick run`);
             sub.textContent = `P(up)/tick=${(res.meta.pUp*100).toFixed(1)}% · ×${res.meta.advantage.toFixed(2)} vs baseline · streak: ${streakTxt}`;
+        }
+
+        /* Matches graph: live digit nodes + animated cursor.
+           The cursor follows the digit produced by the latest tick and glides
+           from the previous digit to the new one, mirroring the visual flow
+           shown in the reference video. */
+        function drawMatchesGraph(canvas, mkt) {
+            const ctx = canvas.getContext("2d");
+            const w = canvas.width, h = canvas.height;
+            ctx.clearRect(0, 0, w, h);
+
+            const win = MATCHES.WINDOW;
+            const digits = mkt.digits.slice(-win);
+            const counts = new Array(10).fill(0);
+            digits.forEach(d => counts[d]++);
+            const n = digits.length || 1;
+            const maxCount = Math.max(...counts, 1);
+            const lastDigit = Number.isInteger(mkt.lastDigit) ? mkt.lastDigit : null;
+            const dist = getMatchesDistribution(mkt);
+            const leader = dist?.leader?.digit ?? null;
+            const least = dist?.least?.digit ?? null;
+
+            // Layout: video-style digit nodes in the upper band, miniature
+            // frequency bars below them.
+            const left = 18, right = w - 18;
+            const nodeStep = (right - left) / 9;
+            const nodeY = 34;
+            const barTop = 65;
+            const barBottom = h - 15;
+            const barHMax = barBottom - barTop;
+
+            // Caption.
+            ctx.textAlign = "left";
+            ctx.fillStyle = "#4a5b6b";
+            ctx.font = "9px 'IBM Plex Mono', monospace";
+            ctx.fillText("LIVE DIGIT CURSOR", 8, 11);
+            ctx.textAlign = "right";
+            ctx.fillStyle = "#7891a3";
+            ctx.fillText(lastDigit == null ? "—" : `TICK → ${lastDigit}`, w - 8, 11);
+
+            // Nodes 0–9.
+            for (let d = 0; d < 10; d++) {
+                const x = left + d * nodeStep;
+                const pct = (counts[d] * 100 / n);
+                const isLast = d === lastDigit;
+                const isLeader = d === leader;
+                const isLeast = d === least;
+
+                // Soft leader/least indicator.
+                if (isLeader) {
+                    ctx.strokeStyle = "rgba(62,207,142,0.28)";
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.arc(x, nodeY, 14, 0, Math.PI * 2);
+                    ctx.stroke();
+                } else if (isLeast) {
+                    ctx.strokeStyle = "rgba(255,93,93,0.22)";
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.arc(x, nodeY, 14, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                // Main digit node.
+                ctx.beginPath();
+                ctx.arc(x, nodeY, 10.5, 0, Math.PI * 2);
+                ctx.fillStyle = isLast ? "#19383b" : "#151e28";
+                ctx.fill();
+                ctx.lineWidth = isLast ? 2 : 1;
+                ctx.strokeStyle = isLast ? "#36c7b5" : "#2a3b4d";
+                ctx.stroke();
+
+                ctx.fillStyle = isLast ? "#e8ffff" : "#dce6ee";
+                ctx.font = "bold 9px 'IBM Plex Mono', monospace";
+                ctx.textAlign = "center";
+                ctx.fillText(String(d), x, nodeY + 3);
+
+                // Percentage.
+                ctx.fillStyle = "#7891a3";
+                ctx.font = "7px 'IBM Plex Mono', monospace";
+                ctx.fillText(`${pct.toFixed(1)}%`, x, nodeY + 20);
+
+                // Mini frequency bars.
+                const bh = barHMax * (counts[d] / maxCount);
+                const bw = Math.max(7, nodeStep - 10);
+                const by = barBottom - bh;
+                ctx.fillStyle = isLast ? "rgba(54,199,181,0.55)" : "#233042";
+                ctx.fillRect(x - bw / 2, by, bw, bh);
+            }
+
+            // Animated cursor. It follows every new produced digit.
+            if (lastDigit != null) {
+                const now = performance.now();
+                const target = lastDigit;
+                const c = canvas._matchCursor || {
+                    value: target,
+                    target,
+                    start: target,
+                    started: now
+                };
+
+                if (c.target !== target) {
+                    c.start = c.value;
+                    c.target = target;
+                    c.started = now;
+                }
+
+                const duration = 240;
+                const t = Math.min(1, Math.max(0, (now - c.started) / duration));
+                const ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+                c.value = c.start + (c.target - c.start) * ease;
+                canvas._matchCursor = c;
+
+                const cx = left + c.value * nodeStep;
+                const cy = nodeY;
+
+                // Cursor halo.
+                const grd = ctx.createRadialGradient(cx, cy, 2, cx, cy, 22);
+                grd.addColorStop(0, "rgba(54,199,181,0.32)");
+                grd.addColorStop(1, "rgba(54,199,181,0)");
+                ctx.fillStyle = grd;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Cursor ring.
+                ctx.strokeStyle = "#36c7b5";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 15.5, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Cursor pointer/triangle under the node.
+                ctx.fillStyle = "#ff5d5d";
+                ctx.beginPath();
+                ctx.moveTo(cx, cy + 22);
+                ctx.lineTo(cx - 4, cy + 28);
+                ctx.lineTo(cx + 4, cy + 28);
+                ctx.closePath();
+                ctx.fill();
+
+                // Keep the animation alive until the cursor reaches the target.
+                if (t < 1) {
+                    if (!canvas._matchAnimFrame) {
+                        canvas._matchAnimFrame = requestAnimationFrame(() => {
+                            canvas._matchAnimFrame = null;
+                            drawMatchesGraph(canvas, mkt);
+                        });
+                    }
+                }
+            }
         }
 
         function drawDigitHistogram(canvas, mkt, opts) {
@@ -2824,14 +3439,46 @@
             ).join("");
         }
 
+
+        function renderMatchesConditions(mkt) {
+            const list = document.getElementById("matchesCondList");
+            const res = evaluateMatchesStatus(mkt);
+            const m = res.meta;
+
+            if (!m.hasData) {
+                list.innerHTML = `<div style="color:var(--faint);font-size:12px;padding:8px 0;">Collecting ${MATCHES.MIN_TICKS} ticks for the Matches engine — ${mkt.digits.length} so far.</div>`;
+                return;
+            }
+
+            const rows = [
+                { k: "Stage",                 v: mkt.matches.stage, cls: "warn" },
+                { k: "Dominant digit",         v: String(m.dominantDigit), cls: "warn" },
+                { k: "Dominant %",             v: Number(m.dominantPct || 0).toFixed(1) + "%", cls: Number(m.dominantPct || 0) >= MATCHES.MIN_LEADER_PCT ? "up" : "neutral" },
+                { k: "Dominant rising",        v: Number(m.dominantGain || 0).toFixed(2) + " pts", cls: Number(m.dominantGain || 0) > 0 ? "up" : "down" },
+                { k: "Least digit",            v: m.leastDigit == null ? "—" : String(m.leastDigit), cls: "neutral" },
+                { k: "Least %",               v: Number(m.leastPct || 0).toFixed(1) + "%", cls: "neutral" },
+                { k: "Prediction digit",       v: m.predictionDigit == null ? "—" : "MATCHES " + m.predictionDigit, cls: "up" },
+                { k: "Opposite range",         v: m.oppositeRange || "—", cls: "warn" },
+                { k: "Opposite ticks",         v: `${mkt.matches.oppositeRun}/${MATCHES.OPPOSITE_RUN}`, cls: mkt.matches.oppositeRun >= MATCHES.OPPOSITE_RUN ? "up" : "neutral" },
+                { k: "Leader condition",       v: m.leaderValid ? "PASS" : "WAIT", cls: m.leaderValid ? "up" : "warn" },
+                { k: "Entry sequence",         v: m.readyToSignal ? "COMPLETE" : "PENDING", cls: m.readyToSignal ? "up" : "neutral" }
+            ];
+
+            list.innerHTML = rows.map(r =>
+                `<div class="cond-row"><span class="cond-k">${r.k}</span><span class="cond-v ${r.cls}">${r.v}</span></div>`
+            ).join("");
+        }
+
         function renderMarketDetail() {
             const mkt = currentMarket();
             const isRF = state.activeTab === "risefall";
             const isHL = state.activeTab === "highlow";
             const isOU = state.activeTab === "onlyupdown";
+            const isMATCH = state.activeTab === "matchdiffer";
             const canvas = document.getElementById("histCanvas");
             const titleEl = document.getElementById("detailChartTitle");
             const digitDetail = document.getElementById("digitDetail");
+            const matchesDetail = document.getElementById("matchesDetail");
             const rfDetail = document.getElementById("rfDetail");
             const hlDetail = document.getElementById("highLowDetail");
             const ouDetail = document.getElementById("onlyUpDownDetail");
@@ -2840,11 +3487,22 @@
                 const n = Math.min(mkt.quotes.length, state.windowSize);
                 titleEl.textContent = `Price sequence — last ${n} ticks`;
                 digitDetail.style.display = "none";
+                matchesDetail.style.display = "none";
                 rfDetail.style.display = "block";
                 hlDetail.style.display = "none";
                 ouDetail.style.display = "none";
                 drawPriceLine(canvas, mkt.quotes.slice(-state.windowSize));
                 renderConditions(mkt);
+            } else if (isMATCH) {
+                const res = evaluateMatchesStatus(mkt);
+                titleEl.textContent = `Matches distribution — last ${MATCHES.WINDOW} ticks`;
+                digitDetail.style.display = "none";
+                matchesDetail.style.display = "block";
+                rfDetail.style.display = "none";
+                hlDetail.style.display = "none";
+                ouDetail.style.display = "none";
+                drawMatchesGraph(canvas, mkt);
+                renderMatchesConditions(mkt);
             } else if (isHL) {
                 const res = evaluateHighLow(mkt, state.windowSize);
                 const barrier = res ? res.meta.barrier : null;
@@ -2852,6 +3510,7 @@
                 const direction = res ? res.direction : null;
                 titleEl.textContent = `Digit distribution + barrier — last ${state.highLowWindow} ticks`;
                 digitDetail.style.display = "none";
+                matchesDetail.style.display = "none";
                 rfDetail.style.display = "none";
                 hlDetail.style.display = "block";
                 ouDetail.style.display = "none";
@@ -2866,6 +3525,7 @@
                 const n = Math.min(mkt.quotes.length, state.windowSize);
                 titleEl.textContent = `Price sequence — last ${n} ticks`;
                 digitDetail.style.display = "none";
+                matchesDetail.style.display = "none";
                 rfDetail.style.display = "none";
                 hlDetail.style.display = "none";
                 ouDetail.style.display = "block";
@@ -2874,6 +3534,7 @@
             } else {
                 titleEl.textContent = `Digit distribution — last ${state.windowSize} ticks`;
                 digitDetail.style.display = "block";
+                matchesDetail.style.display = "none";
                 rfDetail.style.display = "none";
                 hlDetail.style.display = "none";
                 ouDetail.style.display = "none";
@@ -2969,6 +3630,10 @@
         }
 
         function formatWait(mkt) {
+            if (state.activeTab === "matchdiffer") {
+                if (mkt.digits.length >= MATCHES.MIN_TICKS) return null;
+                return `Collecting ticks — ${mkt.digits.length}/${MATCHES.MIN_TICKS} minimum`;
+            }
             const need = Math.min(20, state.windowSize);
             if (mkt.digits.length >= need) return null;
             return `Collecting ticks — ${mkt.digits.length}/${need} minimum`;
@@ -2976,6 +3641,36 @@
 
         function scanAllMarkets(windowSize) {
             const out = [];
+
+            if (state.activeTab === "matchdiffer") {
+                markets.forEach(mkt => {
+                    const r = evaluateMatchesStatus(mkt);
+                    if (r) {
+                        out.push({
+                            ...r,
+                            symbol: mkt.code,
+                            marketName: mkt.name,
+                            stageProgress: Math.max(
+                                r.meta && r.meta.readyToSignal ? 100 : 0,
+                                mkt.matches.stage === "wait_dominant" ? 80 :
+                                mkt.matches.stage === "wait_least" ? 65 :
+                                mkt.matches.stage === "opposite_run" ? (mkt.matches.oppositeRun / MATCHES.OPPOSITE_RUN) * 50 :
+                                r.meta && r.meta.leaderValid ? 25 : 0
+                            )
+                        });
+                    }
+                });
+
+                out.sort((a, b) => {
+                    const aActive = state.activeConfirmations.has(a.symbol + "|matchdiffer") ? 1 : 0;
+                    const bActive = state.activeConfirmations.has(b.symbol + "|matchdiffer") ? 1 : 0;
+                    return (bActive - aActive) ||
+                           ((b.stageProgress || 0) - (a.stageProgress || 0)) ||
+                           ((b.meta?.dominantPct || 0) - (a.meta?.dominantPct || 0));
+                });
+                return out;
+            }
+
             markets.forEach(mkt => {
                 Object.keys(CATS).forEach(cat => {
                     const r = evaluateCategory(mkt, cat, windowSize);
@@ -2999,14 +3694,31 @@
             clearConfidenceLine("aiConfidenceLine");
 
             const top = results[0];
-            if (!top) {
+            const matchActive = state.activeTab === "matchdiffer"
+                ? Array.from(state.activeConfirmations.values()).filter(x => x.category === "matchdiffer")
+                : [];
+
+            if (state.activeTab === "matchdiffer" && matchActive.length > 0) {
+                const latest = matchActive[matchActive.length - 1];
+                reticle.classList.add("acquired", "confirmed");
+                eyebrow.textContent = "MATCH SIGNAL";
+                eyebrow.classList.add("acquired");
+                marketEl.textContent = latest.marketName;
+                labelEl.className = "ret-label up";
+                labelEl.textContent = `◆ ${latest.label}`;
+                setConfidenceLine("aiConfidenceLine", subEl,
+                    `<b>RULE COMPLETE</b> · next tick tests the predicted digit`);
+                subEl.textContent = "";
+            } else if (!top) {
                 reticle.classList.remove("acquired", "confirmed");
                 eyebrow.textContent = "Scanning";
                 eyebrow.classList.remove("acquired");
                 marketEl.textContent = "—";
                 labelEl.className = "ret-label idle";
-                labelEl.textContent = "No repeating pattern across any tracked market yet";
-                subEl.textContent = "Re-scoring every few seconds as new ticks arrive.";
+                labelEl.textContent = state.activeTab === "matchdiffer"
+                    ? "No market has completed the Matches sequence yet"
+                    : "No repeating pattern across any tracked market yet";
+                subEl.textContent = "Re-scoring every tracked market as new ticks arrive.";
             } else {
                 const topKey = top.symbol + "|" + top.category;
                 const topConfirmed = state.activeConfirmations.get(topKey);
@@ -3017,20 +3729,42 @@
                 marketEl.textContent = top.marketName;
                 labelEl.className = "ret-label " + top.direction;
                 labelEl.textContent = (top.direction === "up" ? "↑ " : "↓ ") + top.label;
-                setConfidenceLine("aiConfidenceLine", subEl,
-                    `<b>${confidenceOf(top)}%</b> confidence &middot; ${CAT_LABELS[top.category]} &middot; ${top.n} ticks`);
+                if (top.category === "matchdiffer") {
+                    setConfidenceLine("aiConfidenceLine", subEl,
+                        `<b>${top.meta?.stage || "WATCHING"}</b> · leader ${top.meta?.dominantDigit ?? "—"} · prediction MATCHES ${top.meta?.predictionDigit ?? "—"}`);
+                } else {
+                    setConfidenceLine("aiConfidenceLine", subEl,
+                        `<b>${confidenceOf(top)}%</b> confidence &middot; ${CAT_LABELS[top.category]} &middot; ${top.n} ticks`);
+                }
                 subEl.textContent = "";
             }
 
             const list = document.getElementById("runnerList");
             const top5 = results.slice(0, 5);
             if (top5.length === 0) {
-                list.innerHTML = `<div style="color:var(--faint);font-size:12px;padding:6px 0;">No signals above threshold — waiting for stronger readings.</div>`;
+                list.innerHTML = `<div style="color:var(--faint);font-size:12px;padding:6px 0;">No market state available yet.</div>`;
             } else {
                 list.innerHTML = top5.map((r, i) => {
                     const mkt = markets.get(r.symbol);
                     const short = mkt ? mkt.short : r.symbol;
                     const dirClass = r.direction === "up" ? "up" : "down";
+
+                    if (r.category === "matchdiffer") {
+                        const active = state.activeConfirmations.has(r.symbol + "|matchdiffer");
+                        const stage = r.meta && r.meta.signalJustFired
+                            ? "SIGNAL"
+                            : (r.meta?.stage || "watching").replace("_", " ").toUpperCase();
+                        const target = r.meta?.predictionDigit == null ? "—" : r.meta.predictionDigit;
+                        return `
+                            <div class="runner${active || i === 0 ? " best" : ""}">
+                                <span class="r-sym">${short}</span>
+                                <span class="r-label ${active ? "up" : "r-label"}">${active ? "MATCHES " + target : stage}</span>
+                                <span class="r-conf">${active ? "RULE COMPLETE" : `L${r.meta?.dominantDigit ?? "—"} · P${target}`}</span>
+                                ${active || i === 0 ? '<span class="r-star">◆</span>' : ''}
+                            </div>
+                        `;
+                    }
+
                     return `
                         <div class="runner${i === 0 ? " best" : ""}">
                             <span class="r-sym">${short}</span>
@@ -3171,7 +3905,8 @@
                 state.activeTab = e.target.dataset.cat;
                 const isHL = state.activeTab === "highlow";
                 const isOU = state.activeTab === "onlyupdown";
-                document.getElementById("windowPicker").style.display     = (isHL || isOU) ? "none" : "flex";
+                const isMATCH = state.activeTab === "matchdiffer";
+                document.getElementById("windowPicker").style.display     = (isHL || isOU || isMATCH) ? "none" : "flex";
                 document.getElementById("highLowPicker").style.display    = isHL ? "flex" : "none";
                 document.getElementById("onlyUpDownPicker").style.display = isOU ? "flex" : "none";
                 renderSignalsPanel();
@@ -3227,7 +3962,7 @@
             radio.addEventListener("change", () => {
                 state.threshold = parseFloat(radio.value);
                 if (state.aiScanning) renderAIScan();
-                if (state.activeTab !== "risefall" && state.activeTab !== "onlyupdown") renderSignalsPanel();
+                if (state.activeTab !== "risefall" && state.activeTab !== "onlyupdown" && state.activeTab !== "matchdiffer") renderSignalsPanel();
             });
         });
 
@@ -3274,13 +4009,23 @@
         renderRfPerformance();
         scheduleRender();
 
+        /* Start the cross-market scanner immediately so Matches mode monitors
+           every subscribed market without requiring a second click. */
+        const autoScanBtn = document.getElementById("startScanBtn");
+        autoScanBtn.textContent = "Stop scan";
+        autoScanBtn.classList.add("primary");
+        state.aiScanning = true;
+        state.aiTimer = setInterval(() => {
+            if (state.aiScanning) renderAIScan();
+        }, AI_SCAN_INTERVAL_MS);
+
         let resizeTimer;
         window.addEventListener("resize", () => {
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(() => { renderMarketDetail(); }, 200);
         });
 
-        console.log("EMRON PULSE — High/Low barrier-digit engine active.");
+        console.log("EMRON PULSE — Dollar Printer Matches + multi-market scanner active.");
     })();
 </script>
 </body>
