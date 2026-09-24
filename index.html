@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>EMRON PULSE — Dollar Printer Matches + Signal Scanner</title>
+    <title>EMRON PULSE — Transitional Mesh + Signal Scanner</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -381,6 +381,11 @@
             background:#161207; 
             color:#ffd9a0; 
         }
+        .tab.mesh.active {
+            border-color:rgba(62,207,142,0.4);
+            background:#0d1a14;
+            color:#b9f2d6;
+        }
         .window-picker {
             display:flex; 
             gap:4px; 
@@ -478,6 +483,40 @@
             color:#ff9a3c; 
             font-weight:600; 
         }
+        .reticle.mesh-hot {
+            border-color:rgba(62,207,142,0.4);
+            animation:mesh-hot-glow 2s ease-in-out infinite;
+        }
+        .reticle.mesh-hot::before, .reticle.mesh-hot::after,
+        .reticle.mesh-hot .rc-tr, .reticle.mesh-hot .rc-bl {
+            border-color:var(--up);
+            opacity:1;
+        }
+        @keyframes mesh-hot-glow {
+            0%,100%{ box-shadow:0 0 0 0 rgba(62,207,142,0); }
+            50%{ box-shadow:0 0 0 3px rgba(62,207,142,0.10); }
+        }
+        .reticle.mesh-cold {
+            border-color:rgba(255,93,93,0.55);
+            animation:mesh-cold-glow 1s ease-in-out infinite;
+        }
+        .reticle.mesh-cold::before, .reticle.mesh-cold::after,
+        .reticle.mesh-cold .rc-tr, .reticle.mesh-cold .rc-bl {
+            border-color:var(--down);
+            opacity:1;
+        }
+        @keyframes mesh-cold-glow {
+            0%,100%{ box-shadow:0 0 0 0 rgba(255,93,93,0); }
+            50%{ box-shadow:0 0 0 3px rgba(255,93,93,0.14); }
+        }
+        .reticle.mesh-warm {
+            border-color:rgba(255,180,84,0.45);
+        }
+        .reticle.mesh-warm::before, .reticle.mesh-warm::after,
+        .reticle.mesh-warm .rc-tr, .reticle.mesh-warm .rc-bl {
+            border-color:var(--sweep);
+            opacity:0.95;
+        }
         @keyframes confirmed-glow {
             0%,100%{ box-shadow:0 0 0 0 rgba(255,154,60,0); }
             50%{ box-shadow:0 0 0 2px rgba(255,154,60,0.12); }
@@ -514,6 +553,14 @@
             animation:banner-appear 0.25s ease-out;
             flex-wrap: wrap;
         }
+        .confirm-banner.mesh {
+            background:linear-gradient(90deg,rgba(62,207,142,0.16),rgba(62,207,142,0.05));
+            border-color:rgba(62,207,142,0.5);
+        }
+        .confirm-banner.mesh-cold {
+            background:linear-gradient(90deg,rgba(255,93,93,0.20),rgba(255,93,93,0.06));
+            border-color:rgba(255,93,93,0.55);
+        }
         @keyframes banner-appear { 
             from{opacity:0;transform:translateY(-6px);} 
             to{opacity:1;transform:translateY(0);} 
@@ -527,10 +574,30 @@
             box-shadow:0 0 0 0 rgba(255,154,60,0.6);
             animation:confirm-pulse-ring 1.4s ease-out infinite;
         }
+        .confirm-banner.mesh .confirm-pulse {
+            background: var(--up);
+            box-shadow: 0 0 0 0 rgba(62,207,142,0.6);
+            animation: confirm-pulse-ring-up 1.4s ease-out infinite;
+        }
+        .confirm-banner.mesh-cold .confirm-pulse {
+            background: var(--down);
+            box-shadow: 0 0 0 0 rgba(255,93,93,0.6);
+            animation: confirm-pulse-ring-cold 1s ease-out infinite;
+        }
         @keyframes confirm-pulse-ring {
             0%{ box-shadow:0 0 0 0 rgba(255,154,60,0.55); }
             70%{ box-shadow:0 0 0 8px rgba(255,154,60,0); }
             100%{ box-shadow:0 0 0 0 rgba(255,154,60,0); }
+        }
+        @keyframes confirm-pulse-ring-up {
+            0%{ box-shadow:0 0 0 0 rgba(62,207,142,0.55); }
+            70%{ box-shadow:0 0 0 8px rgba(62,207,142,0); }
+            100%{ box-shadow:0 0 0 0 rgba(62,207,142,0); }
+        }
+        @keyframes confirm-pulse-ring-cold {
+            0%{ box-shadow:0 0 0 0 rgba(255,93,93,0.65); }
+            70%{ box-shadow:0 0 0 10px rgba(255,93,93,0); }
+            100%{ box-shadow:0 0 0 0 rgba(255,93,93,0); }
         }
         .confirm-text { 
             flex:1; 
@@ -543,6 +610,8 @@
             letter-spacing:0.03em; 
             margin-bottom:2px; 
         }
+        .confirm-banner.mesh .confirm-eyebrow { color: var(--up); }
+        .confirm-banner.mesh-cold .confirm-eyebrow { color: var(--down); }
         .confirm-detail { 
             font-size:12px; 
             color:var(--paper); 
@@ -747,6 +816,14 @@
         .runner.best { 
             border-color:var(--sweep-dim); 
             background:rgba(255,180,84,0.05); 
+        }
+        .runner.mesh-best {
+            border-color: rgba(62,207,142,0.45);
+            background: rgba(62,207,142,0.05);
+        }
+        .runner.mesh-cold-best {
+            border-color: rgba(255,93,93,0.45);
+            background: rgba(255,93,93,0.05);
         }
         .runner .r-sym { 
             color:var(--mute); 
@@ -1008,7 +1085,117 @@
         #infoModal strong { 
             color:var(--paper); 
         }
-        
+
+        /* ==== Transitional Mesh ==== */
+        .mesh-badge {
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            padding:2px 9px;
+            border-radius:12px;
+            font-size:10px;
+            font-family:var(--font-mono);
+            font-weight:600;
+            letter-spacing:0.04em;
+            margin-left:6px;
+            vertical-align:middle;
+        }
+        .mesh-badge.hot {
+            background: rgba(62,207,142,0.14);
+            color: var(--up);
+            border: 1px solid rgba(62,207,142,0.4);
+        }
+        .mesh-badge.warm {
+            background: rgba(255,180,84,0.12);
+            color: var(--sweep);
+            border: 1px solid rgba(255,180,84,0.4);
+        }
+        .mesh-badge.cold {
+            background: rgba(255,93,93,0.16);
+            color: var(--down);
+            border: 1px solid rgba(255,93,93,0.5);
+        }
+        .mesh-lookback-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+        .mesh-lookback-table th {
+            text-align: left;
+            color: var(--faint);
+            font-size: 10px;
+            font-weight: 500;
+            padding: 4px 6px 6px 0;
+            border-bottom: 1px solid var(--line-soft);
+            font-family: var(--font-body);
+        }
+        .mesh-lookback-table td {
+            padding: 5px 6px 5px 0;
+            border-bottom: 1px solid var(--line-soft);
+            font-family: var(--font-mono);
+            font-size: 11px;
+        }
+        .mesh-lookback-table td.top {
+            color: var(--sweep);
+            font-weight: 600;
+        }
+        .mesh-lookback-table td.pred {
+            color: var(--up);
+            font-weight: 700;
+        }
+        .mesh-lookback-table td.pred-cold {
+            color: var(--down);
+            font-weight: 700;
+        }
+        .mesh-session {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--line-soft);
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .mesh-session .lbl {
+            font-size: 10px;
+            color: var(--faint);
+            margin-bottom: 2px;
+        }
+        .mesh-session .val {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--paper);
+        }
+        .mesh-session .val.target {
+            color: var(--sweep);
+        }
+        .mesh-recommend {
+            margin-top: 10px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 0.02em;
+        }
+        .mesh-recommend.enter {
+            background: rgba(62,207,142,0.10);
+            color: var(--up);
+            border: 1px solid rgba(62,207,142,0.35);
+        }
+        .mesh-recommend.hold {
+            background: rgba(255,180,84,0.10);
+            color: var(--sweep);
+            border: 1px solid rgba(255,180,84,0.35);
+        }
+        .mesh-recommend.stop {
+            background: rgba(255,93,93,0.12);
+            color: var(--down);
+            border: 1px solid rgba(255,93,93,0.4);
+        }
+
         @media (max-width: 480px) {
             .wrap { padding: 0 12px 50px; }
             .brand-text h1 { font-size: 14px; }
@@ -1099,8 +1286,12 @@
             }
             #infoModal h2 { font-size: 16px; }
             #infoModal p { font-size: 11px; }
+            .mesh-lookback-table th, .mesh-lookback-table td {
+                padding: 3px 4px 3px 0;
+                font-size: 10px;
+            }
         }
-        
+
         @media (max-width: 360px) {
             .wrap { padding: 0 10px 40px; }
             .brand-mark {
@@ -1151,7 +1342,7 @@
             <div class="brand-mark"></div>
             <div class="brand-text">
                 <h1>EMRON PULSE</h1>
-                <p>Rise/Fall · digit · high/low · streak signal scanner</p>
+                <p>Rise/Fall · digit · high/low · streak · Transitional Mesh</p>
             </div>
         </div>
         <div class="status-cluster">
@@ -1180,7 +1371,7 @@
     <div class="confirm-banner" id="confirmBanner">
         <div class="confirm-pulse"></div>
         <div class="confirm-text">
-            <div class="confirm-eyebrow">Confirmed — trade now</div>
+            <div class="confirm-eyebrow" id="confirmEyebrow">Window open — trade now</div>
             <div class="confirm-detail" id="confirmDetail">—</div>
         </div>
         <button class="btn small ghost" id="dismissConfirmBtn">Dismiss</button>
@@ -1196,7 +1387,7 @@
                 <div class="panel-head">
                     <div>
                         <h2 id="signalsHeading">Rise / Fall readout</h2>
-                        <p id="signalsSub">Reads the selected strategy using the live tick stream. Matches uses the Dollar Printer staged rules across every tracked market.</p>
+                        <p id="signalsSub">Reads the selected strategy using the live tick stream. Transitional Mesh opens a window when the conditions are met, and closes it when the digit turns red.</p>
                     </div>
                     <div class="switch" id="ensembleSwitch" role="button" tabindex="0">
                         <span>Smoothed</span>
@@ -1207,7 +1398,7 @@
                     <button class="tab rf active" data-cat="risefall">Rise / Fall</button>
                     <button class="tab" data-cat="evenodd">Even / Odd</button>
                     <button class="tab" data-cat="overunder">Over / Under</button>
-                    <button class="tab" data-cat="matchdiffer">Matches</button>
+                    <button class="tab mesh" data-cat="mesh">Transitional Mesh</button>
                     <button class="tab" data-cat="highlow">High Tick / Low Tick</button>
                     <button class="tab" data-cat="onlyupdown">Only Ups / Only Downs</button>
                 </div>
@@ -1262,9 +1453,22 @@
                             <h3 style="margin-top:16px;">Recent tape</h3>
                             <div class="tape" id="tickTape"></div>
                         </div>
-                        <div id="matchesDetail" style="display:none;">
-                            <h3>Matches rule state</h3>
-                            <div class="cond-list" id="matchesCondList"></div>
+                        <div id="meshDetail" style="display:none;">
+                            <h3>Transitional Mesh — entry window</h3>
+                            <div id="meshLookbacks"></div>
+                            <div class="mesh-recommend" id="meshRecommend">—</div>
+                            <div class="cond-list" id="meshCondList"></div>
+                            <div class="mesh-session">
+                                <div>
+                                    <div class="lbl">Profit target</div>
+                                    <div class="val target" id="meshTarget">$150</div>
+                                </div>
+                                <div>
+                                    <div class="lbl">Sessions completed</div>
+                                    <div class="val" id="meshSessions">0</div>
+                                </div>
+                                <button class="btn small" id="meshResetBtn">Mark reset</button>
+                            </div>
                         </div>
                         <div id="rfDetail">
                             <h3>Condition checklist</h3>
@@ -1288,7 +1492,7 @@
                 <div class="panel-head">
                     <div>
                         <h2>Cross-market scan</h2>
-                        <p>Scans every tracked market continuously. In Matches mode, every market runs the Dollar Printer sequence independently and the signal fires as soon as one completes all entry conditions.</p>
+                        <p>Scans every tracked market continuously. In Mesh mode, every market shows whether its entry window is OPEN or CLOSED.</p>
                     </div>
                 </div>
                 <div class="window-picker" id="aiWindowPicker">
@@ -1366,7 +1570,7 @@
             <path d="M12 2L2 7v6c0 5.25 3.75 9.74 10 11 6.25-1.26 10-5.75 10-11V7l-10-5z" stroke="#4a5b6b" stroke-width="1.4"/>
             <path d="M12 8v5M12 16.5v.01" stroke="#4a5b6b" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
-        <p>Every number on this page is computed client-side from Deriv's public tick stream. Matches mode uses the staged Dollar Printer rules: dominant digit at 12% or higher and rising, second-most increasing digit among the top three as the prediction, three consecutive ticks from the opposite range, then a touch of the least-appearing digit followed by the dominant digit. The other strategy tabs retain their existing statistical engines. Signal completion is rule-based and is not a guarantee of future results. Trade within your own risk tolerance.</p>
+        <p>Every number on this page is computed client-side from Deriv's public tick stream. Transitional Mesh runs the 150/100/50/25/15 lookback method: a prediction digit is locked once it stays dominant across all five windows, at which point the <span style="color:var(--up)">ENTRY WINDOW IS OPEN</span> — that's when you run the bot. The engine then monitors that digit tick by tick; the moment it is no longer the most appearing digit in the current window, the <span style="color:var(--down)">ENTRY WINDOW IS CLOSED</span> — stop and re-predict. $150 profit target is a reminder only — this is read-only analysis, not trade execution. Trade within your own risk tolerance.</p>
     </div>
 
     <div id="infoModal">
@@ -1379,17 +1583,19 @@
                 <li><strong>Rise / Fall:</strong> Directional read on the price sequence — 5/10/20-tick momentum, higher highs &amp; higher lows, short and medium trend, momentum acceleration, and a choppy-regime filter</li>
                 <li><strong>Even/Odd:</strong> Bias toward even or odd last digits</li>
                 <li><strong>Over/Under:</strong> Bias toward digits ≥5 or &lt;5</li>
-                <li><strong>Matches:</strong> Dollar Printer sequence — top-three distribution, dominant digit ≥12% and rising, second-most increasing top-three digit as prediction, three opposite-range ticks, least-digit touch, then dominant-digit touch to trigger the Match signal.</li>
-                <li><strong>High Tick / Low Tick:</strong> Compares the last-digit distribution against a barrier digit (auto-selected or fixed). Predicts whether the next last digit will land <em>above</em> the barrier (HIGH TICK) or <em>below</em> it (LOW TICK). Uses a Jeffreys-smoothed proportion test against the fair baseline for that barrier.</li>
+                <li><strong>Transitional Mesh:</strong> Locks the digit that stays the most appearing digit across the <b>150 / 100 / 50 / 25 / 15</b> lookback windows. A prediction only fires when the 15- and 25-tick windows agree and the digit stays compatible with 50, 100, and 150. The engine then monitors the digit live — <span style="color:var(--up)">blue</span> or <span style="color:var(--sweep)">white</span> means keep the bot running; <span style="color:var(--down)">red</span> means the window has closed — stop immediately and re-scan.</li>
+                <li><strong>High Tick / Low Tick:</strong> Compares the last-digit distribution against a barrier digit. Predicts whether the next last digit will land <em>above</em> (HIGH) or <em>below</em> (LOW) it.</li>
                 <li><strong>Only Ups / Only Downs:</strong> Estimates the per-tick up/down bias and compares the probability of a full N-tick consecutive run against the fair-coin baseline of 0.5<sup>N</sup>.</li>
             </ul>
-            <p><strong>Matches rule details:</strong></p>
+            <p><strong>Transitional Mesh — entry window rules:</strong></p>
             <ul>
-                <li>Uses the most recent 100 digits for the live distribution.</li>
-                <li>Rising is measured against the same-size window shifted 20 ticks backward.</li>
-                <li>The three highest current-percentage digits are ranked by percentage gain; the second-highest gainer becomes the Match prediction.</li>
-                <li>For a dominant digit 0–4, the opposite range is 5–9; for a dominant digit 5–9, the opposite range is 0–4.</li>
-                <li>After 3 consecutive opposite-range ticks, the setup is frozen and the engine waits for the least-appearing digit, then the dominant digit.</li>
+                <li><strong>Conditions to open:</strong> The same digit must be a top digit in the 15- and 25-tick windows, and stay compatible with the 50-, 100- and 150-tick windows (top-3 or ≥70% of that window's max count). When all five confirm, that digit is locked in and the <span style="color:var(--up)"><strong>ENTRY WINDOW OPENS</strong></span>.</li>
+                <li><strong>While open:</strong> The engine keeps checking every tick whether the digit is still the most appearing digit in the 25-tick window. As long as it stays on top, the window remains open and you keep the bot running.</li>
+                <li><strong>Window closes:</strong> The moment another digit overtakes your prediction — i.e. it is <strong>no longer the most appearing digit</strong> — the <span style="color:var(--down)"><strong>ENTRY WINDOW CLOSES</strong></span>. Stop immediately and re-scan the mesh for a fresh prediction.</li>
+                <li>After closing, the engine displays the closed state for a short window before looking for a new prediction, so you can see the alert and act on it.</li>
+                <li><strong>Temperature:</strong> GREEN = window open &amp; dominant. AMBER = window still open but the digit has tied or gone quiet. RED = window closed.</li>
+                <li>Window-open signals are logged for next-tick resolution (hit if the next last digit equals the prediction).</li>
+                <li>$150 profit-target reminder is displayed; the session counter lets you mark a reset each time you bank a target.</li>
             </ul>
             <p><strong>Statistics:</strong></p>
             <ul>
@@ -1399,10 +1605,7 @@
                 <li><strong>Signal confirmation:</strong> the direction must persist for several consecutive ticks</li>
                 <li><strong>Signal decay:</strong> confidence fades as time passes after the signal</li>
                 <li><strong>Deduplication:</strong> prevents repeated alerts on the same move</li>
-                <li><strong>High/Low resolution:</strong> the barrier digit is frozen at signal time; the very next tick's last digit is compared against it</li>
-                <li><strong>Only Ups/Downs resolution:</strong> the winning streak is frozen at signal time, and every subsequent tick is checked until the run completes or breaks</li>
             </ul>
-            <p><strong>Confidence vs accuracy:</strong> the percentage beside a live call is a model score. The Rise/Fall performance panel is the only place a real, measured hit rate is shown.</p>
             <p>Past performance does not guarantee future results. Trade responsibly.</p>
         </div>
     </div>
@@ -1414,15 +1617,16 @@
         "use strict";
 
         /* --------------------------------------------------------------
-           EMRON PULSE — Updated Signal Engine
+           EMRON PULSE — Signal Engine
            Rise/Fall   : price-sequence momentum + structure + trend + regime
            Digit cats  : Wilson-adjusted z, multi-scale ensemble, regime filter
            High/Low    : barrier-digit vs last-digit distribution (z-tested)
            Only Ups/Dn : consecutive-run probability vs 0.5^N baseline
-           Matches     : Dollar Printer staged sequence — 12%+ rising leader,
-                         top-three gain ranking, opposite-range run, least touch,
-                         dominant touch, then second-gainer Match prediction
-           Shared      : confirmation persistence, cooldown, decay, logging
+           Mesh        : Transitional Mesh — prediction locked across
+                         150 / 100 / 50 / 25 / 15.
+                         WINDOW OPEN when conditions met.
+                         WINDOW CLOSED the moment the digit is no longer the
+                         most appearing digit in the primary window.
            -------------------------------------------------------------- */
 
         const SYMBOLS = [
@@ -1435,7 +1639,7 @@
             { code: "1HZ25V", short: "V25 (1s)", name: "Volatility 25 (1s) Index", decimals: 2 },
             { code: "1HZ50V", short: "V50 (1s)", name: "Volatility 50 (1s) Index", decimals: 2 },
             { code: "1HZ75V", short: "V75 (1s)", name: "Volatility 75 (1s) Index", decimals: 2 },
-            { code: "1HZ100V", short: "V100 (1s)", name: "Volatility 100 (1s) Index", decimals: 2 },
+            { code: "1HZ100V", short: "V100 (1s) Index", name: "Volatility 100 (1s) Index", decimals: 2 },
         ];
 
         const MAX_BUFFER = 300;
@@ -1450,12 +1654,12 @@
         const AI_SCAN_INTERVAL_MS = 4000;
         const RENDER_THROTTLE_MS = 180;
 
-        const CATS = { risefall: true, evenodd: true, overunder: true, matchdiffer: true, highlow: true, onlyupdown: true };
+        const CATS = { risefall: true, evenodd: true, overunder: true, mesh: true, highlow: true, onlyupdown: true };
         const CAT_LABELS = {
             risefall: "Rise / Fall",
             evenodd: "Even / Odd",
             overunder: "Over / Under",
-            matchdiffer: "Matches",
+            mesh: "Transitional Mesh",
             highlow: "High Tick / Low Tick",
             onlyupdown: "Only Ups / Only Downs"
         };
@@ -1474,7 +1678,6 @@
             CHOP_CONF_CAP: 60
         };
 
-        /* High / Low Tick — now digit-barrier based */
         const HL = {
             MIN_TICKS: 25,
             DEFAULT_WINDOW: 100,
@@ -1489,16 +1692,21 @@
             MIN_SCORE: 0.30
         };
 
-        /* Dollar Printer Matches strategy — derived from the supplied rules */
-        const MATCHES = {
-            WINDOW: 100,
-            RISE_SHIFT: 20,
-            MIN_TICKS: 120,
-            MIN_LEADER_PCT: 12.0,
-            TOP_COUNT: 3,
-            OPPOSITE_RUN: 3,
-            MAX_SETUP_WAIT: 35,
-            CONFIRM_DISPLAY_TICKS: 1
+        /* Transitional Mesh — 150 / 100 / 50 / 25 / 15 lookback consistency.
+           Prediction is locked only when a digit dominates the smallest windows
+           AND stays compatible as the window grows. */
+        const MESH = {
+            LOOKBACKS: [150, 100, 50, 25, 15],
+            MIN_TICKS: 150,
+            PRIMARY_WINDOW: 25,        // window whose top digit decides OPEN / CLOSED
+            RECENT_WINDOW: 12,
+            HOT_RECENT_MIN: 2,
+            WARM_LAST_SEEN: 10,
+            STABLE_REQUIRED: 2,
+            SIGNAL_COOLDOWN: 15,
+            COLD_ALERT_COOLDOWN: 30,
+            COLD_DISPLAY_TICKS: 12,
+            PROFIT_TARGET: 150
         };
 
         const state = {
@@ -1523,7 +1731,9 @@
             highLowWindow: HL.DEFAULT_WINDOW,
             highLowBarrier: HL.DEFAULT_BARRIER,
             onlyUpDownDuration: OU.DEFAULT_DURATION,
-            rfStats: { signals: 0, wins: 0, losses: 0, run: 0, runDir: null, last20: [] }
+            rfStats: { signals: 0, wins: 0, losses: 0, run: 0, runDir: null, last20: [] },
+            meshSession: { completed: 0 },
+            meshClosedNotice: null
         };
 
         const markets = new Map();
@@ -1536,13 +1746,18 @@
                 lastQuote: null,
                 lastDigit: null,
                 streak: { dir: null, len: 0 },
-                matches: {
-                    stage: "watching",
-                    oppositeRun: 0,
-                    stageTicks: 0,
-                    setup: null,
-                    lastSignal: null,
-                    lastSignalTick: -Infinity
+                mesh: {
+                    prediction: null,
+                    windowState: "closed",
+                    hotState: "none",
+                    strength: "weak",
+                    stableTicks: 0,
+                    lastSeen: Infinity,
+                    recentCount: 0,
+                    coldSince: -1,
+                    openConfirmedTick: -Infinity,
+                    lastColdAlertTick: -Infinity,
+                    lookbacks: null
                 }
             });
             state.symbolStrengthHistory.set(s.code, []);
@@ -1572,14 +1787,6 @@
             return var_ === 0 ? 0 : cov / var_;
         }
 
-        function normCdf(x) {
-            const t = 1 / (1 + 0.2316419 * Math.abs(x));
-            const d = 0.3989422804014327 * Math.exp(-x * x / 2);
-            const p = d * t * (0.319381530 + t * (-0.356563782 + t * (1.781477937 +
-                      t * (-1.821255978 + t * 1.330274429))));
-            return x >= 0 ? 1 - p : p;
-        }
-
         function multiScaleZ(mkt, baseWindow, category) {
             const scales = [0.5, 1, 2];
             let sumW = 0, sumZ = 0;
@@ -1597,7 +1804,7 @@
             return sumW ? sumZ / sumW : 0;
         }
 
-        /* ==== DIGIT CATEGORY EVALUATION ==== */
+        /* ==== DIGIT CATEGORY EVALUATION (statistical) ==== */
         function evaluateCategoryRaw(mkt, category, windowSize) {
             const digits = mkt.digits.slice(-windowSize);
             if (digits.length < Math.min(20, windowSize)) return null;
@@ -1620,299 +1827,319 @@
                     direction: z >= 0 ? "up" : "down",
                     z, absZ: Math.abs(z), n: digits.length
                 };
-            } else if (category === "matchdiffer") {
-                /* The live staged Dollar Printer engine is stateful and is stepped
-                   once per tick from updateConfirmations(). This read-only branch
-                   returns its current status for the UI. */
-                return evaluateMatchesStatus(mkt);
+            } else if (category === "mesh") {
+                return evaluateMesh(mkt);
             }
             return result;
         }
 
+        /* ==== TRANSITIONAL MESH ENGINE ==== */
 
-        /* ==== DOLLAR PRINTER MATCHES ENGINE ==== */
+        function topDigitsFromCounts(counts) {
+            const max = Math.max(...counts);
+            const out = [];
+            for (let d = 0; d < 10; d++) if (counts[d] === max) out.push(d);
+            return out;
+        }
 
-        function getMatchesDistribution(mkt) {
-            const all = mkt.digits;
-            const win = MATCHES.WINDOW;
-            const shift = MATCHES.RISE_SHIFT;
-            if (all.length < MATCHES.MIN_TICKS) return null;
+        function buildLookbacks(digits, lookbacks) {
+            const out = {};
+            for (const lb of lookbacks) {
+                const w = digits.slice(-lb);
+                const counts = new Array(10).fill(0);
+                w.forEach(d => counts[d]++);
+                out[lb] = { counts, topDigits: topDigitsFromCounts(counts), n: w.length };
+            }
+            return out;
+        }
 
-            const current = all.slice(-win);
-            const priorEnd = all.length - shift;
-            const priorStart = priorEnd - win;
-            if (priorStart < 0) return null;
-            const prior = all.slice(priorStart, priorEnd);
+        /* Confirmation gate:
+           1. The 15- and 25-tick windows must agree on the same top digit.
+           2. That digit must stay compatible with each larger window
+              (top-3 OR at least 70% of that window's max count) for
+              50, then 100, then 150.
+           3. If any window fails, NO TRADE. */
+        function meshFindCandidate(mkt) {
+            if (mkt.digits.length < MESH.MIN_TICKS) return null;
 
-            const counts = new Array(10).fill(0);
-            const priorCounts = new Array(10).fill(0);
-            current.forEach(d => counts[d]++);
-            prior.forEach(d => priorCounts[d]++);
+            const lookbacks = buildLookbacks(mkt.digits, MESH.LOOKBACKS);
 
-            const n = current.length;
-            const rows = [];
-            for (let d = 0; d < 10; d++) {
-                const pct = counts[d] * 100 / n;
-                const prevPct = priorCounts[d] * 100 / n;
-                rows.push({
-                    digit: d,
-                    count: counts[d],
-                    pct,
-                    prevPct,
-                    gain: pct - prevPct
-                });
+            const top15 = lookbacks[15].topDigits;
+            const top25 = lookbacks[25].topDigits;
+
+            // Step 1 — the two smallest windows must agree
+            let candidates = top15.filter(d => top25.includes(d));
+            if (candidates.length === 0) return null;
+
+            // Step 2 — compatibility with each larger window
+            function keepCompatible(lb, list) {
+                const counts = lookbacks[lb].counts;
+                const maxCount = Math.max(...counts);
+                const sorted = [];
+                for (let i = 0; i < 10; i++) sorted.push(i);
+                sorted.sort((a, b) => counts[b] - counts[a]);
+                const top3 = sorted.slice(0, 3);
+                return list.filter(d =>
+                    top3.includes(d) || counts[d] >= 0.7 * maxCount
+                );
             }
 
-            const byPct = rows.slice().sort((a, b) =>
-                (b.pct - a.pct) || (b.gain - a.gain) || (a.digit - b.digit)
-            );
+            candidates = keepCompatible(50, candidates);
+            if (candidates.length === 0) return null;
+            candidates = keepCompatible(100, candidates);
+            if (candidates.length === 0) return null;
+            candidates = keepCompatible(150, candidates);
+            if (candidates.length === 0) return null;
 
-            const top3 = byPct.slice(0, MATCHES.TOP_COUNT);
-            const top3ByGain = top3.slice().sort((a, b) =>
-                (b.gain - a.gain) || (b.pct - a.pct) || (a.digit - b.digit)
-            );
+            // Step 3 — pick the highest count in the 25-tick window
+            const prediction = candidates.reduce((best, d) =>
+                lookbacks[25].counts[d] > lookbacks[25].counts[best] ? d : best
+            , candidates[0]);
 
-            const leader = byPct[0];
-            const least = rows.slice().sort((a, b) =>
-                (a.pct - b.pct) || (a.gain - b.gain) || (a.digit - b.digit)
-            )[0];
+            const temp = meshMonitorPrediction(mkt, prediction);
+            return {
+                prediction,
+                windowState: temp.windowState,
+                hotState: temp.state,
+                strength: temp.strength,
+                lastSeen: temp.lastSeen,
+                recentCount: temp.recentCount,
+                lookbacks: temp.lookbacks,
+                isTop25: temp.isTop25,
+                tied25: temp.tied25
+            };
+        }
 
-            const prediction = top3ByGain[1] || top3ByGain[0] || null;
-            const leaderRising = leader ? leader.gain > 0 : false;
-            const leaderValid = !!leader && leader.pct >= MATCHES.MIN_LEADER_PCT && leaderRising;
+        /* Live monitor for a locked prediction digit.
+           RED rule = the digit is NO LONGER the most appearing digit
+           in the primary 25-tick window → WINDOW CLOSED. */
+        function meshMonitorPrediction(mkt, prediction) {
+            const digits = mkt.digits;
+            const lookbacks = buildLookbacks(digits, MESH.LOOKBACKS);
+
+            const isTop = {};
+            const tied = {};
+            MESH.LOOKBACKS.forEach(lb => {
+                const c = lookbacks[lb].counts;
+                const m = Math.max(...c);
+                isTop[lb] = c[prediction] === m;
+                tied[lb] = c.filter(v => v === m).length;
+            });
+
+            const isTop25 = isTop[25];
+            const tied25 = tied[25];
+
+            let lastSeen = Infinity;
+            for (let i = digits.length - 1; i >= 0; i--) {
+                if (digits[i] === prediction) { lastSeen = digits.length - 1 - i; break; }
+            }
+            const recent = digits.slice(-MESH.RECENT_WINDOW);
+            const recentCount = recent.filter(d => d === prediction).length;
+
+            let state_, windowState;
+            if (!isTop25) {
+                state_ = "cold";
+                windowState = "closed";
+            } else if (tied25 > 1) {
+                state_ = "warm";
+                windowState = "open";
+            } else if (recentCount === 0 && lastSeen > MESH.WARM_LAST_SEEN) {
+                state_ = "warm";
+                windowState = "open";
+            } else {
+                state_ = "hot";
+                windowState = "open";
+            }
+
+            // Strength = how many of the 5 lookbacks the digit still tops
+            const topCount = MESH.LOOKBACKS.filter(lb => isTop[lb]).length;
+            let strength;
+            if (topCount === MESH.LOOKBACKS.length) strength = "strong";
+            else if (topCount >= 3) strength = "medium";
+            else strength = "weak";
 
             return {
-                n,
-                counts,
-                rows,
-                byPct,
-                top3,
-                top3ByGain,
-                leader,
-                least,
-                prediction,
-                leaderValid
+                state: state_, windowState, strength,
+                lastSeen, recentCount,
+                isTop25, tied25,
+                isTop, lookbacks
             };
         }
 
-        function matchesOppositeRange(digit, dominantDigit) {
-            if (dominantDigit == null || digit == null) return false;
-            return dominantDigit <= 4 ? digit >= 5 : digit <= 4;
-        }
+        /* Display helper — returns the current mesh state as the UI reads it */
+        function computeMesh(mkt) {
+            if (mkt.digits.length < MESH.MIN_TICKS) return null;
 
-        function resetMatchesState(mkt, reason = "watching") {
-            mkt.matches.stage = reason;
-            mkt.matches.oppositeRun = 0;
-            mkt.matches.stageTicks = 0;
-            mkt.matches.setup = null;
-        }
-
-        function startMatchesRun(mkt, dist) {
-            mkt.matches.stage = "opposite_run";
-            mkt.matches.oppositeRun = 0;
-            mkt.matches.stageTicks = 0;
-            mkt.matches.setup = null;
-        }
-
-        function freezeMatchesSetup(mkt, dist) {
-            const prediction = dist.prediction;
-            mkt.matches.setup = {
-                dominantDigit: dist.leader.digit,
-                dominantPct: dist.leader.pct,
-                dominantGain: dist.leader.gain,
-                leastDigit: dist.least.digit,
-                leastPct: dist.least.pct,
-                predictionDigit: prediction ? prediction.digit : null,
-                predictionPct: prediction ? prediction.pct : null,
-                predictionGain: prediction ? prediction.gain : null,
-                top3: dist.top3.map(x => ({
-                    digit: x.digit,
-                    pct: x.pct,
-                    gain: x.gain
-                })),
-                frozenAtTick: mkt.tickCount
-            };
-        }
-
-        function stepMatchesEngine(mkt) {
-            const dist = getMatchesDistribution(mkt);
-            const st = mkt.matches;
-
-            if (!dist || !dist.leader || !dist.prediction) {
-                resetMatchesState(mkt, "collecting");
-                return null;
-            }
-
-            /* Before the 3-tick confirmation run, the setup must remain valid. */
-            if (st.stage === "watching" || st.stage === "collecting") {
-                if (!dist.leaderValid) {
-                    st.stage = "watching";
-                    st.oppositeRun = 0;
-                    st.stageTicks = 0;
-                    st.setup = null;
-                    return null;
-                }
-                startMatchesRun(mkt, dist);
-            }
-
-            if (st.stage === "opposite_run") {
-                if (!matchesOppositeRange(mkt.lastDigit, dist.leader.digit)) {
-                    st.oppositeRun = 0;
-                    st.stageTicks = 0;
-                    return null;
-                }
-
-                st.oppositeRun += 1;
-                st.stageTicks += 1;
-
-                if (st.oppositeRun >= MATCHES.OPPOSITE_RUN) {
-                    freezeMatchesSetup(mkt, dist);
-                    st.stage = "wait_least";
-                    st.stageTicks = 0;
-                }
-                return null;
-            }
-
-            if (st.stage === "wait_least") {
-                st.stageTicks += 1;
-                if (st.stageTicks > MATCHES.MAX_SETUP_WAIT) {
-                    resetMatchesState(mkt, "watching");
-                    return null;
-                }
-
-                if (mkt.lastDigit === st.setup.leastDigit) {
-                    st.stage = "wait_dominant";
-                    st.stageTicks = 0;
-                }
-                return null;
-            }
-
-            if (st.stage === "wait_dominant") {
-                st.stageTicks += 1;
-                if (st.stageTicks > MATCHES.MAX_SETUP_WAIT) {
-                    resetMatchesState(mkt, "watching");
-                    return null;
-                }
-
-                if (mkt.lastDigit === st.setup.dominantDigit) {
-                    const signal = {
-                        category: "matchdiffer",
-                        label: `MATCHES ${st.setup.predictionDigit}`,
-                        direction: "up",
-                        score: 1,
-                        absScore: 1,
-                        strength: 1,
-                        confidence: 100,
-                        n: MATCHES.WINDOW,
-                        meta: {
-                            readyToSignal: true,
-                            predictionDigit: st.setup.predictionDigit,
-                            dominantDigit: st.setup.dominantDigit,
-                            dominantPct: st.setup.dominantPct,
-                            dominantGain: st.setup.dominantGain,
-                            leastDigit: st.setup.leastDigit,
-                            leastPct: st.setup.leastPct,
-                            top3: st.setup.top3,
-                            oppositeRun: MATCHES.OPPOSITE_RUN,
-                            ruleComplete: true
-                        }
-                    };
-
-                    st.lastSignal = {
-                        tick: mkt.tickCount,
-                        ...signal.meta
-                    };
-                    st.lastSignalTick = mkt.tickCount;
-                    resetMatchesState(mkt, "watching");
-                    return signal;
-                }
-            }
-
-            return null;
-        }
-
-        function evaluateMatchesStatus(mkt) {
-            const dist = getMatchesDistribution(mkt);
-            const st = mkt.matches;
-            const signalJustFired = st.lastSignal && (mkt.tickCount - st.lastSignalTick <= MATCHES.CONFIRM_DISPLAY_TICKS);
-
-            if (signalJustFired) {
+            if (mkt.mesh.prediction !== null) {
+                const temp = meshMonitorPrediction(mkt, mkt.mesh.prediction);
                 return {
-                    category: "matchdiffer",
-                    label: `MATCHES ${st.lastSignal.predictionDigit}`,
-                    direction: "up",
-                    score: 1,
-                    absScore: 1,
-                    strength: 1,
-                    confidence: 100,
-                    n: MATCHES.WINDOW,
-                    meta: {
-                        readyToSignal: true,
-                        signalJustFired: true,
-                        predictionDigit: st.lastSignal.predictionDigit,
-                        dominantDigit: st.lastSignal.dominantDigit,
-                        dominantPct: st.lastSignal.dominantPct,
-                        dominantGain: st.lastSignal.dominantGain,
-                        leastDigit: st.lastSignal.leastDigit,
-                        leastPct: st.lastSignal.leastPct,
-                        top3: st.lastSignal.top3,
-                        oppositeRun: MATCHES.OPPOSITE_RUN,
-                        ruleComplete: true
-                    }
+                    prediction: mkt.mesh.prediction,
+                    windowState: temp.windowState,
+                    hotState: temp.state,
+                    strength: temp.strength,
+                    lastSeen: temp.lastSeen,
+                    recentCount: temp.recentCount,
+                    lookbacks: temp.lookbacks,
+                    isTop25: temp.isTop25,
+                    tied25: temp.tied25
                 };
             }
 
-            const meta = dist ? {
-                readyToSignal: false,
-                stage: st.stage,
-                oppositeRun: st.oppositeRun,
-                predictionDigit: st.setup ? st.setup.predictionDigit : (dist.prediction ? dist.prediction.digit : null),
-                dominantDigit: st.setup ? st.setup.dominantDigit : (dist.leader ? dist.leader.digit : null),
-                dominantPct: st.setup ? st.setup.dominantPct : (dist.leader ? dist.leader.pct : 0),
-                dominantGain: st.setup ? st.setup.dominantGain : (dist.leader ? dist.leader.gain : 0),
-                leastDigit: st.setup ? st.setup.leastDigit : (dist.least ? dist.least.digit : null),
-                leastPct: st.setup ? st.setup.leastPct : (dist.least ? dist.least.pct : 0),
-                top3: st.setup ? st.setup.top3 : (dist.top3 || []).map(x => ({
-                    digit: x.digit,
-                    pct: x.pct,
-                    gain: x.gain
-                })),
-                oppositeRange: (st.setup ? st.setup.dominantDigit : dist.leader.digit) <= 4 ? "5–9" : "0–4",
-                leaderValid: dist.leaderValid
-            } : {
-                readyToSignal: false,
-                stage: "collecting",
-                oppositeRun: 0,
-                predictionDigit: null,
-                dominantDigit: null,
-                dominantPct: 0,
-                dominantGain: 0,
-                leastDigit: null,
-                leastPct: 0,
-                top3: [],
-                oppositeRange: "—",
-                leaderValid: false
-            };
-
-            const hasData = !!dist;
-            const label = meta.readyToSignal
-                ? `MATCHES ${meta.predictionDigit}`
-                : "WATCHING MATCH RULE";
+            const lookbacks = buildLookbacks(mkt.digits, MESH.LOOKBACKS);
+            const candidate = meshFindCandidate(mkt);
+            if (candidate) {
+                return {
+                    prediction: candidate.prediction,
+                    windowState: candidate.windowState,
+                    hotState: candidate.hotState,
+                    strength: candidate.strength,
+                    lastSeen: candidate.lastSeen,
+                    recentCount: candidate.recentCount,
+                    lookbacks: candidate.lookbacks,
+                    isTop25: candidate.isTop25,
+                    tied25: candidate.tied25
+                };
+            }
 
             return {
-                category: "matchdiffer",
-                label,
-                direction: "up",
-                score: 0,
-                absScore: 0,
-                strength: 0,
-                confidence: meta.readyToSignal ? 100 : 0,
-                n: dist ? dist.n : 0,
+                prediction: null,
+                windowState: "pending",
+                hotState: "none",
+                strength: "weak",
+                lastSeen: Infinity,
+                recentCount: 0,
+                lookbacks,
+                isTop25: false,
+                tied25: 0
+            };
+        }
+
+        function evaluateMesh(mkt) {
+            const mesh = computeMesh(mkt);
+            if (!mesh || mesh.prediction === null) return null;
+
+            const windowLabel = mesh.windowState === "closed" ? "WINDOW CLOSED" : "WINDOW OPEN";
+            const subLabel =
+                mesh.hotState === "cold" ? "closed" :
+                mesh.hotState === "hot"  ? "hot"  : "fading";
+
+            let absScore = mesh.strength === "strong" ? 1.0 :
+                           mesh.strength === "medium" ? 0.72 : 0.42;
+            if (mesh.hotState === "cold") absScore *= 0.25;
+
+            return {
+                category: "mesh",
+                label: `MESH ${mesh.prediction} · ${windowLabel}`,
+                direction: mesh.hotState === "cold" ? "down" : "up",
+                score: absScore,
+                absScore,
+                strength: absScore,
+                confidence: Math.round(50 + 45 * absScore),
+                n: mkt.digits.length,
                 meta: {
-                    ...meta,
-                    hasData
+                    predictionDigit: mesh.prediction,
+                    windowState: mesh.windowState,
+                    hotState: mesh.hotState,
+                    subLabel,
+                    strength: mesh.strength,
+                    lookbacks: mesh.lookbacks,
+                    lastSeen: mesh.lastSeen,
+                    recentCount: mesh.recentCount,
+                    isTop25: mesh.isTop25,
+                    tied25: mesh.tied25
                 }
             };
+        }
+
+        /* The stateful mesh stepper — opens a window when conditions are met,
+           closes it the moment the digit loses the top spot. */
+        function stepMeshEngine(mkt) {
+            if (mkt.digits.length < MESH.MIN_TICKS) {
+                mkt.mesh.prediction = null;
+                mkt.mesh.windowState = "pending";
+                mkt.mesh.hotState = "none";
+                mkt.mesh.stableTicks = 0;
+                mkt.mesh.coldSince = -1;
+                return { mesh: null, coldTransition: false, coldPrediction: null };
+            }
+
+            if (mkt.mesh.prediction === null) {
+                const candidate = meshFindCandidate(mkt);
+                if (candidate) {
+                    mkt.mesh.prediction = candidate.prediction;
+                    mkt.mesh.windowState = candidate.windowState;
+                    mkt.mesh.hotState = candidate.hotState;
+                    mkt.mesh.strength = candidate.strength;
+                    mkt.mesh.lastSeen = candidate.lastSeen;
+                    mkt.mesh.recentCount = candidate.recentCount;
+                    mkt.mesh.lookbacks = candidate.lookbacks;
+                    mkt.mesh.stableTicks = 1;
+                    mkt.mesh.coldSince = -1;
+                }
+                return { mesh: null, coldTransition: false, coldPrediction: null };
+            }
+
+            const temp = meshMonitorPrediction(mkt, mkt.mesh.prediction);
+            const prevHotState = mkt.mesh.hotState;
+
+            mkt.mesh.windowState = temp.windowState;
+            mkt.mesh.hotState = temp.state;
+            mkt.mesh.strength = temp.strength;
+            mkt.mesh.lastSeen = temp.lastSeen;
+            mkt.mesh.recentCount = temp.recentCount;
+            mkt.mesh.lookbacks = temp.lookbacks;
+
+            let coldTransition = false;
+            let coldPrediction = null;
+            if (temp.state === "cold" && prevHotState !== "cold" && prevHotState !== "none") {
+                coldTransition = true;
+                coldPrediction = mkt.mesh.prediction;
+                mkt.mesh.coldSince = mkt.tickCount;
+            }
+
+            if (temp.state === "cold") {
+                if (mkt.mesh.coldSince >= 0 &&
+                    mkt.tickCount - mkt.mesh.coldSince > MESH.COLD_DISPLAY_TICKS) {
+                    mkt.mesh.prediction = null;
+                    mkt.mesh.windowState = "pending";
+                    mkt.mesh.hotState = "none";
+                    mkt.mesh.stableTicks = 0;
+                    mkt.mesh.coldSince = -1;
+                }
+                return { mesh: null, coldTransition, coldPrediction };
+            }
+
+            mkt.mesh.coldSince = -1;
+            mkt.mesh.stableTicks++;
+
+            if (temp.state === "hot" && temp.strength !== "weak" &&
+                mkt.mesh.stableTicks >= MESH.STABLE_REQUIRED &&
+                mkt.tickCount - mkt.mesh.openConfirmedTick > MESH.SIGNAL_COOLDOWN) {
+                mkt.mesh.openConfirmedTick = mkt.tickCount;
+                return {
+                    mesh: {
+                        category: "mesh",
+                        label: `MESH ${mkt.mesh.prediction}`,
+                        direction: "up",
+                        score: 1, absScore: 1, strength: 1,
+                        confidence: 100,
+                        n: mkt.digits.length,
+                        meta: {
+                            predictionDigit: mkt.mesh.prediction,
+                            windowState: "open",
+                            hotState: temp.state,
+                            strength: temp.strength,
+                            lookbacks: temp.lookbacks,
+                            lastSeen: temp.lastSeen,
+                            recentCount: temp.recentCount
+                        }
+                    },
+                    coldTransition: false,
+                    coldPrediction: null
+                };
+            }
+
+            return { mesh: null, coldTransition, coldPrediction };
         }
 
         /* ==== RISE / FALL ENGINE ==== */
@@ -2060,8 +2287,7 @@
                 category: "risefall",
                 label: dir === "up" ? "RISE" : "FALL",
                 direction: dir,
-                score,
-                absScore,
+                score, absScore,
                 strength: absScore,
                 confidence,
                 n: Math.min(q.length, windowSize),
@@ -2084,7 +2310,7 @@
             };
         }
 
-        /* ==== HIGH / LOW TICK ENGINE (barrier digit) ==== */
+        /* ==== HIGH / LOW TICK ENGINE ==== */
         function evaluateHighLow(mkt, windowSize) {
             const win = state.highLowWindow;
             const digits = mkt.digits.slice(-win);
@@ -2094,7 +2320,6 @@
             digits.forEach(d => counts[d]++);
             const n = digits.length;
 
-            // Modal digit — the single most frequent digit in the window
             let modeDigit = 0, modeCount = -1;
             for (let d = 0; d < 10; d++) {
                 if (counts[d] > modeCount) { modeCount = counts[d]; modeDigit = d; }
@@ -2123,24 +2348,16 @@
                 let cand = null;
                 if (zHigh >= 0 && zHigh >= zLow) {
                     cand = {
-                        barrier: b,
-                        direction: "up",
-                        label: "HIGH TICK",
-                        sideLabel: `> ${b}`,
-                        p: pHigh,
-                        base: baseHigh,
-                        z: zHigh,
+                        barrier: b, direction: "up",
+                        label: "HIGH TICK", sideLabel: `> ${b}`,
+                        p: pHigh, base: baseHigh, z: zHigh,
                         above, below
                     };
                 } else if (zLow >= 0) {
                     cand = {
-                        barrier: b,
-                        direction: "down",
-                        label: "LOW TICK",
-                        sideLabel: `< ${b}`,
-                        p: pLow,
-                        base: baseLow,
-                        z: zLow,
+                        barrier: b, direction: "down",
+                        label: "LOW TICK", sideLabel: `< ${b}`,
+                        p: pLow, base: baseLow, z: zLow,
                         above, below
                     };
                 }
@@ -2163,9 +2380,7 @@
                 absScore: best.absScore,
                 strength: best.absScore,
                 confidence,
-                z: best.z,
-                absZ: best.absZ,
-                n,
+                z: best.z, absZ: best.absZ, n,
                 meta: {
                     barrier: best.barrier,
                     sideLabel: best.sideLabel,
@@ -2251,9 +2466,7 @@
                 score: isUps ? absScore : -absScore,
                 absScore,
                 strength: absScore,
-                confidence,
-                z,
-                absZ: Math.abs(z),
+                confidence, z, absZ: Math.abs(z),
                 n: q.length,
                 meta: {
                     duration, baseline,
@@ -2272,6 +2485,7 @@
             if (category === "risefall")   return evaluateRiseFall(mkt, windowSize);
             if (category === "highlow")    return evaluateHighLow(mkt, windowSize);
             if (category === "onlyupdown") return evaluateOnlyUpDown(mkt, windowSize);
+            if (category === "mesh")       return evaluateMesh(mkt);
             return evaluateCategoryRaw(mkt, category, windowSize);
         }
 
@@ -2297,10 +2511,13 @@
                 if (s >= 0.30) return "weak";
                 return null;
             }
-            if (result.category === "matchdiffer") {
-                return result.meta && result.meta.readyToSignal ? "rule complete" : null;
+            if (result.category === "mesh") {
+                if (result.meta.windowState === "closed") return null;
+                if (result.meta.strength === "strong" && result.meta.hotState === "hot") return "very strong";
+                if (result.meta.strength === "medium" && result.meta.hotState !== "cold") return "strong";
+                if (result.meta.hotState === "hot") return "medium";
+                return "weak";
             }
-            // highlow behaves like a digit strategy → use z
             const z = result.absZ;
             if (z >= 2.75) return "very strong";
             if (z >= 2.0) return "strong";
@@ -2320,15 +2537,18 @@
             if (result.category === "onlyupdown") {
                 return result.absScore >= OU.MIN_SCORE;
             }
-            if (result.category === "matchdiffer") {
-                return !!(result.meta && result.meta.readyToSignal);
+            if (result.category === "mesh") {
+                return result.meta.predictionDigit !== null && result.meta.windowState === "open";
             }
             return result.absZ >= state.threshold;
         }
 
         function confidenceOf(result) {
             if (!result) return 0;
-            if (result.category === "matchdiffer") return result.meta && result.meta.readyToSignal ? 100 : 0;
+            if (result.category === "mesh") {
+                if (result.meta.windowState === "closed") return 25;
+                return result.confidence;
+            }
             if (result.category === "risefall" || result.category === "onlyupdown") return result.confidence;
             return confidenceFromZ(result.absZ);
         }
@@ -2404,19 +2624,15 @@
                 const isOver = digit >= 5;
                 return entry.label === "OVER" ? isOver : !isOver;
             }
-            if (entry.category === "matchdiffer") {
-                const target = entry.matchMeta && Number.isInteger(entry.matchMeta.predictionDigit)
-                    ? entry.matchMeta.predictionDigit
-                    : (() => {
-                        const m = entry.label.match(/(\d)$/);
-                        return m ? parseInt(m[1], 10) : null;
-                    })();
+            if (entry.category === "mesh") {
+                const target = entry.meshMeta && Number.isInteger(entry.meshMeta.predictionDigit)
+                    ? entry.meshMeta.predictionDigit : null;
                 return target === null ? false : digit === target;
             }
             const m = entry.label.match(/(\d)$/);
             const target = m ? parseInt(m[1], 10) : null;
             if (target === null) return false;
-            return entry.label.startsWith("MATCHES") ? digit === target : digit !== target;
+            return digit !== target;
         }
 
         function logSignal(result, marketName) {
@@ -2429,18 +2645,16 @@
             let resolveAtTick = mkt.tickCount + RESOLVE_AFTER_TICKS;
             let highLowMeta = null;
             let onlyUpDownMeta = null;
-            let matchMeta = null;
+            let meshMeta = null;
 
-            if (result.category === "matchdiffer" && result.meta) {
+            if (result.category === "mesh" && result.meta) {
                 resolveAtTick = mkt.tickCount + 1;
-                matchMeta = {
+                meshMeta = {
                     predictionDigit: result.meta.predictionDigit,
-                    dominantDigit: result.meta.dominantDigit,
-                    leastDigit: result.meta.leastDigit,
-                    dominantPct: result.meta.dominantPct,
-                    dominantGain: result.meta.dominantGain,
-                    top3: result.meta.top3,
-                    oppositeRun: result.meta.oppositeRun
+                    windowState: result.meta.windowState,
+                    hotState: result.meta.hotState,
+                    strength: result.meta.strength,
+                    lastSeen: result.meta.lastSeen
                 };
             } else if (result.category === "highlow" && result.meta) {
                 resolveAtTick = mkt.tickCount + 1;
@@ -2478,7 +2692,7 @@
                 resolveAtTick,
                 highLowMeta,
                 onlyUpDownMeta,
-                matchMeta
+                meshMeta
             };
             state.history.unshift(entry);
             if (state.history.length > 40) state.history.pop();
@@ -2540,34 +2754,43 @@
             Object.keys(CATS).forEach(cat => {
                 const key = symbolCode + "|" + cat;
 
-                /* Matches is a stateful sequence and fires immediately when the
-                   final least-digit → dominant-digit condition completes. */
-                if (cat === "matchdiffer") {
-                    const previous = state.activeConfirmations.get(key);
-                    if (previous && previous.confirmTick < mkt.tickCount) {
-                        state.activeConfirmations.delete(key);
+                if (cat === "mesh") {
+                    const stepResult = stepMeshEngine(mkt);
+
+                    if (stepResult.coldTransition) {
+                        if (state.activeConfirmations.has(key)) {
+                            state.activeConfirmations.delete(key);
+                        }
+                        state.meshClosedNotice = {
+                            symbol: symbolCode,
+                            marketName: marketName,
+                            prediction: stepResult.coldPrediction,
+                            expiresAt: Date.now() + 12000
+                        };
+                        if (state.soundEnabled) playColdAlert();
+                        renderConfirmationBanner();
+                        return;
                     }
 
-                    const matchSignal = stepMatchesEngine(mkt);
-
-                    if (matchSignal) {
+                    if (stepResult.mesh) {
                         const entry = {
-                            key,
-                            symbol: symbolCode,
-                            marketName,
+                            key, symbol: symbolCode, marketName,
                             category: cat,
-                            label: matchSignal.label,
+                            label: stepResult.mesh.label,
                             direction: "up",
                             confidence: 100,
                             confirmedAt: Date.now(),
                             confirmTick: mkt.tickCount,
-                            matchMeta: matchSignal.meta
+                            meshMeta: stepResult.mesh.meta
                         };
 
                         state.activeConfirmations.set(key, entry);
                         state.bannerDismissed = false;
                         if (state.soundEnabled) playConfirmChime();
-                        logSignal({ ...matchSignal, symbol: symbolCode }, marketName);
+                        logSignal({ ...stepResult.mesh, symbol: symbolCode }, marketName);
+                        renderConfirmationBanner();
+                    } else if (mkt.mesh.windowState === "closed" && state.activeConfirmations.has(key)) {
+                        state.activeConfirmations.delete(key);
                         renderConfirmationBanner();
                     }
                     return;
@@ -2608,9 +2831,7 @@
 
                 if (track.confirmed && !wasConfirmed) {
                     const entry = {
-                        key,
-                        symbol: symbolCode,
-                        marketName,
+                        key, symbol: symbolCode, marketName,
                         category: cat,
                         label: evalRaw.label,
                         direction: evalRaw.direction,
@@ -2646,24 +2867,67 @@
             } catch (_) {}
         }
 
+        function playColdAlert() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = "sawtooth";
+                osc.frequency.setValueAtTime(660, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.45);
+                gain.gain.setValueAtTime(0.22, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.5);
+            } catch (_) {}
+        }
+
         function renderConfirmationBanner() {
             const banner = document.getElementById("confirmBanner");
             const detail = document.getElementById("confirmDetail");
+            const eyebrow = document.getElementById("confirmEyebrow");
+
+            const now = Date.now();
+            if (state.meshClosedNotice && state.meshClosedNotice.expiresAt > now) {
+                const n = state.meshClosedNotice;
+                banner.classList.remove("mesh");
+                banner.classList.add("mesh-cold");
+                eyebrow.textContent = "Entry window closed — stop";
+                detail.innerHTML = `
+                    <span class="cf-label down">✖ WINDOW CLOSED · MESH ${n.prediction ?? "—"}</span>
+                    on <b>${n.marketName}</b> · predicted digit is no longer the most appearing digit · re-scan for a new prediction
+                `;
+                banner.style.display = "flex";
+                return;
+            }
+            if (state.meshClosedNotice && state.meshClosedNotice.expiresAt <= now) {
+                state.meshClosedNotice = null;
+            }
+
             const active = Array.from(state.activeConfirmations.values());
             if (active.length === 0) {
                 banner.style.display = "none";
+                banner.classList.remove("mesh", "mesh-cold");
                 return;
             }
             const latest = active[active.length - 1];
-            if (latest.category === "matchdiffer") {
+            banner.classList.remove("mesh-cold");
+
+            if (latest.category === "mesh") {
+                const mm = latest.meshMeta || {};
+                banner.classList.add("mesh");
+                eyebrow.textContent = "Entry window open — trade now";
                 detail.innerHTML = `
                     <span class="cf-label up">◆ ${latest.label}</span>
-                    on <b>${latest.marketName}</b> · Matches rule complete · next tick tests the predicted digit
+                    on <b>${latest.marketName}</b> · conditions met — digit <b>${mm.predictionDigit}</b> is the most appearing digit · ${(mm.strength || "").toUpperCase()} consistency
                 `;
                 banner.style.display = "flex";
                 return;
             }
 
+            banner.classList.remove("mesh");
             const dirClass = latest.direction === "up" ? "up" : "down";
             let arrow;
             if (latest.category === "highlow") {
@@ -2673,6 +2937,7 @@
             } else {
                 arrow = latest.direction === "up" ? "⬆" : "⬇";
             }
+            eyebrow.textContent = "Confirmed — trade now";
             detail.innerHTML = `
                 <span class="cf-label ${dirClass}">${arrow} ${latest.label}</span>
                 on <b>${latest.marketName}</b> · ${CAT_LABELS[latest.category] || latest.category} · ${latest.confidence}% confidence
@@ -2693,6 +2958,10 @@
                 renderMarketDetail();
                 renderReadiness();
                 if (state.aiScanning) renderAIScan();
+                if (state.meshClosedNotice && state.meshClosedNotice.expiresAt <= Date.now()) {
+                    state.meshClosedNotice = null;
+                    renderConfirmationBanner();
+                }
             }, RENDER_THROTTLE_MS);
         }
 
@@ -2767,28 +3036,28 @@
             const isRF = state.activeTab === "risefall";
             const isHL = state.activeTab === "highlow";
             const isOU = state.activeTab === "onlyupdown";
-            const isMATCH = state.activeTab === "matchdiffer";
+            const isMESH = state.activeTab === "mesh";
 
             document.getElementById("signalsHeading").textContent =
                 isRF ? "Rise / Fall readout" :
                 isHL ? "High Tick / Low Tick readout" :
                 isOU ? "Only Ups / Only Downs readout" :
-                isMATCH ? "Dollar Printer Matches readout" :
+                isMESH ? "Transitional Mesh readout" :
                 "Signal readout";
 
             document.getElementById("signalsSub").innerHTML = isRF
                 ? `Reads the last <span id="windowLabelText">${state.windowSize}</span> ticks of the price sequence — momentum, structure, trend and regime must agree before a call is confirmed.`
                 : isHL
-                ? `Examines the last-digit distribution over the last ${state.highLowWindow} ticks. Compares the observed proportion above (or below) the barrier digit against its fair baseline, and predicts the next tick's last digit as <b>HIGH TICK</b> (above barrier) or <b>LOW TICK</b> (below barrier). Barrier is ${state.highLowBarrier === "auto" ? "auto-selected for the strongest edge" : "fixed at " + state.highLowBarrier}.`
+                ? `Examines the last-digit distribution over the last ${state.highLowWindow} ticks against a barrier digit. Barrier is ${state.highLowBarrier === "auto" ? "auto-selected for the strongest edge" : "fixed at " + state.highLowBarrier}.`
                 : isOU
-                ? `Estimates the per-tick up/down bias from the last ${OU.LOOKBACK} ticks (Jeffreys-smoothed) and compares P(${state.onlyUpDownDuration} consecutive moves) against the fair-coin baseline of 0.5<sup>${state.onlyUpDownDuration}</sup>.`
-                : isMATCH
-                ? `Scans all ${markets.size} tracked markets continuously. Leader must be ≥12% and rising; then 3 opposite-range ticks → least digit touch → dominant digit touch → MATCH signal using the second-most increasing digit among the top three.`
+                ? `Estimates the per-tick up/down bias from the last ${OU.LOOKBACK} ticks and compares P(${state.onlyUpDownDuration} consecutive moves) against 0.5<sup>${state.onlyUpDownDuration}</sup>.`
+                : isMESH
+                ? `Locks the digit that stays the most appearing digit across the <b>150 / 100 / 50 / 25 / 15</b> lookbacks. Conditions met → <span style="color:var(--up)">ENTRY WINDOW OPEN</span>. When the digit is no longer the most appearing digit → <span style="color:var(--down)">ENTRY WINDOW CLOSED</span>.`
                 : `Reads the last <span id="windowLabelText">${state.windowSize}</span> ticks on the selected market for a statistically significant departure from randomness.`;
 
             document.getElementById("retMarket").textContent = mkt.name;
 
-            const useEnsemble = !isRF && !isHL && !isOU && !isMATCH;
+            const useEnsemble = !isRF && !isHL && !isOU && !isMESH;
             const ensembleSwitch = document.getElementById("ensembleSwitch");
             ensembleSwitch.style.opacity = useEnsemble ? "1" : "0.35";
             ensembleSwitch.style.pointerEvents = useEnsemble ? "auto" : "none";
@@ -2800,37 +3069,29 @@
 
             clearConfidenceLine("retConfidenceLine");
             label.classList.remove("soft");
+            reticle.classList.remove("mesh-hot", "mesh-warm", "mesh-cold");
+
+            if (isMESH) {
+                renderMeshReticle(mkt, reticle, eyebrow, label, sub);
+                return;
+            }
 
             const confirmKey = state.selectedSymbol + "|" + state.activeTab;
             const confirmed = state.activeConfirmations.get(confirmKey);
 
             if (confirmed) {
                 reticle.classList.add("acquired", "confirmed");
-                eyebrow.textContent = confirmed.category === "matchdiffer" ? "MATCH SIGNAL" : "Confirmed — trade now";
+                eyebrow.textContent = "Confirmed — trade now";
                 eyebrow.classList.add("acquired");
                 label.className = "ret-label " + confirmed.direction;
-                label.textContent = confirmed.category === "matchdiffer"
-                    ? "◆ " + confirmed.label
-                    : (confirmed.direction === "up" ? "↑ " : "↓ ") + confirmed.label;
+                label.textContent = (confirmed.direction === "up" ? "↑ " : "↓ ") + confirmed.label;
 
-                if (confirmed.category === "matchdiffer") {
-                    const mm = confirmed.matchMeta || {};
-                    setConfidenceLine("retConfidenceLine", sub,
-                        `<b>RULE COMPLETE</b> · dominant ${mm.dominantDigit ?? "—"} · least ${mm.leastDigit ?? "—"} · prediction <b>${mm.predictionDigit ?? "—"}</b>`);
-                    sub.textContent = "The next tick is the Match prediction test.";
-                } else {
-                    setConfidenceLine("retConfidenceLine", sub,
-                        `<b>${confirmed.confidence}%</b> confidence &middot; held ${CONFIRM_PERSIST}+ ticks straight`);
-                    sub.textContent = "This call has stayed consistent across several ticks in a row — the strongest read this scanner produces, still not a guarantee.";
-                }
+                setConfidenceLine("retConfidenceLine", sub,
+                    `<b>${confirmed.confidence}%</b> confidence &middot; held ${CONFIRM_PERSIST}+ ticks straight`);
+                sub.textContent = "This call has stayed consistent across several ticks in a row — the strongest read this scanner produces, still not a guarantee.";
                 return;
             }
             reticle.classList.remove("confirmed");
-
-            if (isMATCH) {
-                renderMatchesReticle(mkt, reticle, eyebrow, label, sub);
-                return;
-            }
 
             if (isRF) {
                 renderRiseFallReticle(mkt, reticle, eyebrow, label, sub);
@@ -2898,86 +3159,63 @@
             sub.textContent = "";
         }
 
+        function topDigitsStr(lb) {
+            if (!lb) return "—";
+            return lb.topDigits.join("/");
+        }
 
-        function renderMatchesReticle(mkt, reticle, eyebrow, label, sub) {
-            const res = evaluateMatchesStatus(mkt);
-            const meta = res.meta;
+        function renderMeshReticle(mkt, reticle, eyebrow, label, sub) {
+            const mesh = computeMesh(mkt);
 
-            if (!meta.hasData) {
-                reticle.classList.remove("acquired");
+            if (!mesh || mesh.prediction === null) {
+                reticle.classList.remove("acquired", "confirmed");
                 eyebrow.textContent = "Watching";
                 eyebrow.classList.remove("acquired");
                 label.className = "ret-label idle";
-                label.textContent = "Collecting tick history…";
-                sub.textContent = `Matches needs ${MATCHES.MIN_TICKS} ticks (${mkt.digits.length} available).`;
+                label.textContent = "Waiting for conditions…";
+                sub.textContent = `Transitional Mesh needs ${MESH.MIN_TICKS} ticks and a digit leading across ${MESH.LOOKBACKS.join(" / ")} — ${mkt.digits.length} so far.`;
                 return;
             }
 
-            if (meta.signalJustFired) {
-                reticle.classList.add("acquired", "confirmed");
-                eyebrow.textContent = "MATCH SIGNAL";
-                eyebrow.classList.add("acquired");
-                label.className = "ret-label up";
-                label.textContent = `◆ MATCHES ${meta.predictionDigit}`;
+            const badgeClass = mesh.hotState === "cold" ? "cold" :
+                               mesh.hotState === "hot"  ? "hot" : "warm";
+
+            if (mesh.windowState === "closed") {
+                reticle.classList.add("mesh-cold");
+                reticle.classList.remove("acquired", "confirmed");
+                eyebrow.textContent = "ENTRY WINDOW CLOSED";
+                eyebrow.classList.remove("acquired");
+                label.className = "ret-label down";
+                label.textContent = `◆ ${mesh.prediction} · CLOSED`;
                 setConfidenceLine("retConfidenceLine", sub,
-                    `<b>RULE COMPLETE</b> · dominant ${meta.dominantDigit} at ${meta.dominantPct.toFixed(1)}% · least ${meta.leastDigit}`);
-                sub.textContent = "The next tick is the prediction test.";
+                    `<span class="mesh-badge cold">WINDOW CLOSED</span> · digit <b>${mesh.prediction}</b> is no longer the most appearing digit in the ${MESH.PRIMARY_WINDOW}-tick window`);
+                sub.textContent = "It has been overtaken — momentum lost. Stop the bot and re-scan the mesh for a fresh prediction.";
                 return;
             }
 
+            if (mesh.hotState === "hot") {
+                reticle.classList.add("mesh-hot");
+            } else {
+                reticle.classList.add("mesh-warm");
+            }
             reticle.classList.remove("confirmed");
-            reticle.classList.remove("acquired");
+            reticle.classList.add("acquired");
+            eyebrow.textContent = mesh.hotState === "hot"
+                ? "ENTRY WINDOW OPEN — conditions met"
+                : "ENTRY WINDOW OPEN — fading";
+            eyebrow.classList.add("acquired");
+            label.className = "ret-label up";
+            label.textContent = `PREDICT ${mesh.prediction}`;
 
-            const stageLabels = {
-                watching: "Watching leader",
-                collecting: "Collecting",
-                opposite_run: `Opposite range ${meta.oppositeRange}`,
-                wait_least: `Wait for least ${meta.leastDigit}`,
-                wait_dominant: `Wait for dominant ${meta.dominantDigit}`
-            };
-
-            const stage = mkt.matches.stage;
-            const stageText = stageLabels[stage] || "Watching leader";
-
-            if (stage === "opposite_run") {
-                reticle.classList.add("acquired");
-                eyebrow.textContent = "Building entry";
-                eyebrow.classList.add("acquired");
-                label.className = "ret-label";
-                label.textContent = `${mkt.matches.oppositeRun}/${MATCHES.OPPOSITE_RUN} opposite`;
-                setConfidenceLine("retConfidenceLine", sub,
-                    `Leader <b>${meta.dominantDigit}</b> · ${meta.dominantPct.toFixed(1)}% · prediction <b>${meta.predictionDigit}</b>`);
-                sub.textContent = `Next required ticks must stay in ${meta.oppositeRange}.`;
-                return;
-            }
-
-            if (stage === "wait_least" || stage === "wait_dominant") {
-                reticle.classList.add("acquired");
-                eyebrow.textContent = stageText;
-                eyebrow.classList.add("acquired");
-                label.className = "ret-label";
-                label.textContent = stage === "wait_least"
-                    ? `TOUCH ${meta.leastDigit}`
-                    : `TOUCH ${meta.dominantDigit}`;
-                setConfidenceLine("retConfidenceLine", sub,
-                    `Prediction <b>MATCHES ${meta.predictionDigit}</b> · leader ${meta.dominantDigit} · least ${meta.leastDigit}`);
-                sub.textContent = stage === "wait_least"
-                    ? "Least-appearing digit must print before the dominant digit."
-                    : "Dominant digit must print now to fire the Match signal.";
-                return;
-            }
-
-            const validLeader = meta.leaderValid;
-            reticle.classList.toggle("acquired", validLeader);
-            eyebrow.textContent = validLeader ? "Entry conditions forming" : "Watching";
-            eyebrow.classList.toggle("acquired", validLeader);
-            label.className = "ret-label idle";
-            label.textContent = validLeader
-                ? `Leader ${meta.dominantDigit} · ${meta.dominantPct.toFixed(1)}%`
-                : "Leader below 12% or not rising";
+            const strengthLabel = mesh.strength.toUpperCase();
+            const topNote = mesh.tied25 > 1
+                ? `tied with ${mesh.tied25 - 1} other digit${mesh.tied25 === 2 ? "" : "s"}`
+                : "sole top digit";
             setConfidenceLine("retConfidenceLine", sub,
-                `Prediction candidate: <b>${meta.predictionDigit ?? "—"}</b> · least: <b>${meta.leastDigit ?? "—"}</b>`);
-            sub.textContent = "Waiting for the 3-tick opposite-range sequence.";
+                `<span class="mesh-badge ${badgeClass}">WINDOW OPEN</span> <b>${strengthLabel}</b> · ${topNote} · last seen ${mesh.lastSeen} ticks ago`);
+
+            sub.innerHTML = "Lookbacks: " +
+                MESH.LOOKBACKS.map(lb => `${lb} → <b>${topDigitsStr(mesh.lookbacks[lb])}</b>`).join(" · ");
         }
 
         function renderRiseFallReticle(mkt, reticle, eyebrow, label, sub) {
@@ -2994,8 +3232,7 @@
             }
 
             const qualified = res.meta.regimeTrending &&
-                              (res.tier === "strong" || res.tier === "very strong" ||
-                               res.absScore >= 0.62);
+                              (res.absScore >= 0.62);
             const arrow = res.direction === "up" ? "↑ " : "↓ ";
 
             reticle.classList.toggle("acquired", qualified);
@@ -3049,9 +3286,7 @@
             setConfidenceLine("retConfidenceLine", sub,
                 `<b>${res.confidence}%</b> confidence &middot; ${tier} &middot; barrier ${m.barrier}`);
 
-            const predictedInfo = m.autoBarrier
-                ? `Auto-barrier ${m.barrier} · predicted digit ${m.predictedDigit} (${m.modeCount}×) · P=${pPct}% vs ${basePct}%`
-                : `Barrier ${m.barrier} · predicted digit ${m.predictedDigit} (${m.modeCount}×) · P=${pPct}% vs ${basePct}%`;
+            const predictedInfo = `${m.autoBarrier ? "Auto-barrier" : "Barrier"} ${m.barrier} · predicted digit ${m.predictedDigit} (${m.modeCount}×) · P=${pPct}% vs ${basePct}%`;
             sub.textContent = predictedInfo;
         }
 
@@ -3093,154 +3328,85 @@
             sub.textContent = `P(up)/tick=${(res.meta.pUp*100).toFixed(1)}% · ×${res.meta.advantage.toFixed(2)} vs baseline · streak: ${streakTxt}`;
         }
 
-        /* Matches graph: live digit nodes + animated cursor.
-           The cursor follows the digit produced by the latest tick and glides
-           from the previous digit to the new one, mirroring the visual flow
-           shown in the reference video. */
-        function drawMatchesGraph(canvas, mkt) {
+        /* Mesh chart — 5 bars per digit, one per lookback (150/100/50/25/15).
+           The locked prediction digit is highlighted green (open), amber
+           (open but fading) or red (closed). */
+        function drawMeshChart(canvas, mkt) {
             const ctx = canvas.getContext("2d");
             const w = canvas.width, h = canvas.height;
             ctx.clearRect(0, 0, w, h);
 
-            const win = MATCHES.WINDOW;
-            const digits = mkt.digits.slice(-win);
-            const counts = new Array(10).fill(0);
-            digits.forEach(d => counts[d]++);
-            const n = digits.length || 1;
-            const maxCount = Math.max(...counts, 1);
-            const lastDigit = Number.isInteger(mkt.lastDigit) ? mkt.lastDigit : null;
-            const dist = getMatchesDistribution(mkt);
-            const leader = dist?.leader?.digit ?? null;
-            const least = dist?.least?.digit ?? null;
-
-            // Layout: video-style digit nodes in the upper band, miniature
-            // frequency bars below them.
-            const left = 18, right = w - 18;
-            const nodeStep = (right - left) / 9;
-            const nodeY = 34;
-            const barTop = 65;
-            const barBottom = h - 15;
-            const barHMax = barBottom - barTop;
-
-            // Caption.
-            ctx.textAlign = "left";
-            ctx.fillStyle = "#4a5b6b";
-            ctx.font = "9px 'IBM Plex Mono', monospace";
-            ctx.fillText("LIVE DIGIT CURSOR", 8, 11);
-            ctx.textAlign = "right";
-            ctx.fillStyle = "#7891a3";
-            ctx.fillText(lastDigit == null ? "—" : `TICK → ${lastDigit}`, w - 8, 11);
-
-            // Nodes 0–9.
-            for (let d = 0; d < 10; d++) {
-                const x = left + d * nodeStep;
-                const pct = (counts[d] * 100 / n);
-                const isLast = d === lastDigit;
-                const isLeader = d === leader;
-                const isLeast = d === least;
-
-                // Soft leader/least indicator.
-                if (isLeader) {
-                    ctx.strokeStyle = "rgba(62,207,142,0.28)";
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.arc(x, nodeY, 14, 0, Math.PI * 2);
-                    ctx.stroke();
-                } else if (isLeast) {
-                    ctx.strokeStyle = "rgba(255,93,93,0.22)";
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.arc(x, nodeY, 14, 0, Math.PI * 2);
-                    ctx.stroke();
-                }
-
-                // Main digit node.
-                ctx.beginPath();
-                ctx.arc(x, nodeY, 10.5, 0, Math.PI * 2);
-                ctx.fillStyle = isLast ? "#19383b" : "#151e28";
-                ctx.fill();
-                ctx.lineWidth = isLast ? 2 : 1;
-                ctx.strokeStyle = isLast ? "#36c7b5" : "#2a3b4d";
-                ctx.stroke();
-
-                ctx.fillStyle = isLast ? "#e8ffff" : "#dce6ee";
-                ctx.font = "bold 9px 'IBM Plex Mono', monospace";
+            const mesh = computeMesh(mkt);
+            if (!mesh || !mesh.lookbacks) {
+                ctx.fillStyle = "#4a5b6b";
+                ctx.font = "12px 'IBM Plex Sans', sans-serif";
                 ctx.textAlign = "center";
-                ctx.fillText(String(d), x, nodeY + 3);
-
-                // Percentage.
-                ctx.fillStyle = "#7891a3";
-                ctx.font = "7px 'IBM Plex Mono', monospace";
-                ctx.fillText(`${pct.toFixed(1)}%`, x, nodeY + 20);
-
-                // Mini frequency bars.
-                const bh = barHMax * (counts[d] / maxCount);
-                const bw = Math.max(7, nodeStep - 10);
-                const by = barBottom - bh;
-                ctx.fillStyle = isLast ? "rgba(54,199,181,0.55)" : "#233042";
-                ctx.fillRect(x - bw / 2, by, bw, bh);
+                ctx.fillText("Collecting ticks…", w / 2, h / 2);
+                return;
             }
 
-            // Animated cursor. It follows every new produced digit.
-            if (lastDigit != null) {
-                const now = performance.now();
-                const target = lastDigit;
-                const c = canvas._matchCursor || {
-                    value: target,
-                    target,
-                    start: target,
-                    started: now
-                };
+            const left = 14, right = w - 14;
+            const groupW = (right - left) / 10;
+            const numBars = MESH.LOOKBACKS.length;
+            const barGap = 1;
+            const barW = Math.max(2, (groupW - 12) / numBars - barGap);
+            const baseY = h - 18;
+            const maxH = baseY - 22;
 
-                if (c.target !== target) {
-                    c.start = c.value;
-                    c.target = target;
-                    c.started = now;
-                }
+            let maxCount = 1;
+            for (const lb of MESH.LOOKBACKS) {
+                maxCount = Math.max(maxCount, ...mesh.lookbacks[lb].counts);
+            }
 
-                const duration = 240;
-                const t = Math.min(1, Math.max(0, (now - c.started) / duration));
-                const ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-                c.value = c.start + (c.target - c.start) * ease;
-                canvas._matchCursor = c;
+            const pred = mesh.prediction;
+            const predIsClosed = mesh.windowState === "closed";
 
-                const cx = left + c.value * nodeStep;
-                const cy = nodeY;
+            for (let d = 0; d < 10; d++) {
+                const gx = left + d * groupW;
+                const isPred = d === pred;
 
-                // Cursor halo.
-                const grd = ctx.createRadialGradient(cx, cy, 2, cx, cy, 22);
-                grd.addColorStop(0, "rgba(54,199,181,0.32)");
-                grd.addColorStop(1, "rgba(54,199,181,0)");
-                ctx.fillStyle = grd;
-                ctx.beginPath();
-                ctx.arc(cx, cy, 22, 0, Math.PI * 2);
-                ctx.fill();
+                MESH.LOOKBACKS.forEach((lb, i) => {
+                    const c = mesh.lookbacks[lb].counts[d];
+                    const bh = maxH * (c / maxCount);
+                    const totalBarsW = barW * numBars + barGap * (numBars - 1);
+                    const bx = gx + (groupW - totalBarsW) / 2 + i * (barW + barGap);
+                    const by = baseY - bh;
 
-                // Cursor ring.
-                ctx.strokeStyle = "#36c7b5";
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(cx, cy, 15.5, 0, Math.PI * 2);
-                ctx.stroke();
-
-                // Cursor pointer/triangle under the node.
-                ctx.fillStyle = "#ff5d5d";
-                ctx.beginPath();
-                ctx.moveTo(cx, cy + 22);
-                ctx.lineTo(cx - 4, cy + 28);
-                ctx.lineTo(cx + 4, cy + 28);
-                ctx.closePath();
-                ctx.fill();
-
-                // Keep the animation alive until the cursor reaches the target.
-                if (t < 1) {
-                    if (!canvas._matchAnimFrame) {
-                        canvas._matchAnimFrame = requestAnimationFrame(() => {
-                            canvas._matchAnimFrame = null;
-                            drawMatchesGraph(canvas, mkt);
-                        });
+                    let color;
+                    if (isPred) {
+                        if (predIsClosed) color = "rgba(255,93,93,0.65)";
+                        else if (mesh.hotState === "hot") color = "rgba(62,207,142,0.85)";
+                        else color = "rgba(255,180,84,0.8)";
+                    } else {
+                        const alpha = 0.16 + (i / Math.max(1, numBars - 1)) * 0.42;
+                        color = `rgba(120,145,163,${alpha.toFixed(2)})`;
                     }
-                }
+                    ctx.fillStyle = color;
+                    ctx.fillRect(bx, by, barW, bh);
+                });
+
+                ctx.fillStyle = isPred
+                    ? (predIsClosed ? "#ff5d5d" : mesh.hotState === "hot" ? "#3ecf8e" : "#ffb454")
+                    : "#7891a3";
+                ctx.font = "bold 10px 'IBM Plex Mono', monospace";
+                ctx.textAlign = "center";
+                ctx.fillText(String(d), gx + groupW / 2, h - 5);
+            }
+
+            // Legend
+            ctx.textAlign = "left";
+            ctx.font = "8px 'IBM Plex Mono', monospace";
+            ctx.fillStyle = "#4a5b6b";
+            ctx.fillText(MESH.LOOKBACKS.join("  ▎  "), 8, 10);
+
+            if (pred !== null) {
+                ctx.textAlign = "right";
+                const stateLabel = predIsClosed ? "WINDOW CLOSED" : "WINDOW OPEN";
+                const stateColor = predIsClosed ? "#ff5d5d" :
+                                   mesh.hotState === "hot" ? "#3ecf8e" : "#ffb454";
+                ctx.fillStyle = stateColor;
+                ctx.font = "bold 9px 'IBM Plex Mono', monospace";
+                ctx.fillText(`PREDICT ${pred} · ${stateLabel}`, w - 8, 10);
             }
         }
 
@@ -3259,7 +3425,6 @@
 
             const barW = (w - 20) / 10;
 
-            // Baseline (uniform expectation)
             ctx.strokeStyle = "#2a3b4d";
             ctx.setLineDash([3, 3]);
             ctx.beginPath();
@@ -3289,7 +3454,6 @@
                 ctx.fillText(String(d), x + barW / 2, h - 5);
             });
 
-            // Barrier line marker
             if (barrier != null) {
                 const bx = 10 + (barrier + 1) * barW;
                 ctx.strokeStyle = "rgba(255,180,84,0.8)";
@@ -3439,34 +3603,101 @@
             ).join("");
         }
 
+        function renderMeshConditions(mkt) {
+            const lookbacksEl = document.getElementById("meshLookbacks");
+            const condList = document.getElementById("meshCondList");
+            const recommendEl = document.getElementById("meshRecommend");
 
-        function renderMatchesConditions(mkt) {
-            const list = document.getElementById("matchesCondList");
-            const res = evaluateMatchesStatus(mkt);
-            const m = res.meta;
+            const mesh = computeMesh(mkt);
 
-            if (!m.hasData) {
-                list.innerHTML = `<div style="color:var(--faint);font-size:12px;padding:8px 0;">Collecting ${MATCHES.MIN_TICKS} ticks for the Matches engine — ${mkt.digits.length} so far.</div>`;
+            if (!mesh || mesh.prediction === null) {
+                lookbacksEl.innerHTML = `<div style="color:var(--faint);font-size:12px;padding:6px 0;">Collecting ${MESH.MIN_TICKS} ticks — ${mkt.digits.length} so far, no digit consistent across ${MESH.LOOKBACKS.join("/")} yet.</div>`;
+                condList.innerHTML = "";
+                recommendEl.className = "mesh-recommend hold";
+                recommendEl.textContent = "Waiting for the conditions to open a window";
                 return;
             }
 
-            const rows = [
-                { k: "Stage",                 v: mkt.matches.stage, cls: "warn" },
-                { k: "Dominant digit",         v: String(m.dominantDigit), cls: "warn" },
-                { k: "Dominant %",             v: Number(m.dominantPct || 0).toFixed(1) + "%", cls: Number(m.dominantPct || 0) >= MATCHES.MIN_LEADER_PCT ? "up" : "neutral" },
-                { k: "Dominant rising",        v: Number(m.dominantGain || 0).toFixed(2) + " pts", cls: Number(m.dominantGain || 0) > 0 ? "up" : "down" },
-                { k: "Least digit",            v: m.leastDigit == null ? "—" : String(m.leastDigit), cls: "neutral" },
-                { k: "Least %",               v: Number(m.leastPct || 0).toFixed(1) + "%", cls: "neutral" },
-                { k: "Prediction digit",       v: m.predictionDigit == null ? "—" : "MATCHES " + m.predictionDigit, cls: "up" },
-                { k: "Opposite range",         v: m.oppositeRange || "—", cls: "warn" },
-                { k: "Opposite ticks",         v: `${mkt.matches.oppositeRun}/${MATCHES.OPPOSITE_RUN}`, cls: mkt.matches.oppositeRun >= MATCHES.OPPOSITE_RUN ? "up" : "neutral" },
-                { k: "Leader condition",       v: m.leaderValid ? "PASS" : "WAIT", cls: m.leaderValid ? "up" : "warn" },
-                { k: "Entry sequence",         v: m.readyToSignal ? "COMPLETE" : "PENDING", cls: m.readyToSignal ? "up" : "neutral" }
+            const pred = mesh.prediction;
+            const isClosed = mesh.windowState === "closed";
+
+            const rows = MESH.LOOKBACKS.map(lb => ({
+                lb,
+                topDigits: mesh.lookbacks[lb].topDigits,
+                counts: mesh.lookbacks[lb].counts,
+                n: mesh.lookbacks[lb].n
+            }));
+
+            const table = `
+                <table class="mesh-lookback-table">
+                    <thead><tr><th>Window</th><th>Most frequent</th><th>Count</th><th>%</th></tr></thead>
+                    <tbody>
+                        ${rows.map(r => {
+                            const topStr = r.topDigits.map(d => {
+                                const cls = d === pred ? (isClosed ? "pred-cold" : "pred") : "top";
+                                return `<span class="${cls}">${d}</span>`;
+                            }).join(" / ");
+                            const c = r.counts[pred] || 0;
+                            const pct = (c * 100 / r.n).toFixed(1);
+                            return `<tr>
+                                <td>${r.lb} ticks</td>
+                                <td>${topStr}</td>
+                                <td>${r.topDigits.map(d => r.counts[d]).join(" / ")}</td>
+                                <td>${pct}%</td>
+                            </tr>`;
+                        }).join("")}
+                    </tbody>
+                </table>
+            `;
+            lookbacksEl.innerHTML = table;
+
+            // How many of the 5 lookbacks have pred as top digit
+            let topCount = 0;
+            MESH.LOOKBACKS.forEach(lb => {
+                const c = mesh.lookbacks[lb].counts;
+                const m = Math.max(...c);
+                if (c[pred] === m) topCount++;
+            });
+
+            const strengthLabel =
+                topCount === MESH.LOOKBACKS.length ? `STRONG — top digit in all ${MESH.LOOKBACKS.length} windows` :
+                topCount >= 3                     ? `MEDIUM — top digit in ${topCount} of ${MESH.LOOKBACKS.length} windows` :
+                                                    `WEAK — top digit in only ${topCount} window${topCount === 1 ? "" : "s"}`;
+
+            const topRow = mesh.isTop25
+                ? (mesh.tied25 > 1 ? `Tied for top (${mesh.tied25} digits)` : "Sole top digit")
+                : "OVERTAKEN — not the top digit";
+
+            const windowLabel = isClosed ? "CLOSED" : "OPEN";
+
+            const condRows = [
+                { k: "Locked prediction",   v: `DIGIT ${pred}`, cls: isClosed ? "down" : "warn" },
+                { k: `Still most appearing (${MESH.PRIMARY_WINDOW})`, v: topRow, cls: mesh.isTop25 ? "up" : "down" },
+                { k: "Consistency",         v: strengthLabel, cls: topCount === MESH.LOOKBACKS.length ? "up" : topCount >= 3 ? "warn" : "down" },
+                { k: "Entry window",        v: windowLabel, cls: isClosed ? "down" : "up" },
+                { k: "Last seen",           v: mesh.lastSeen === Infinity ? "—" : mesh.lastSeen + " ticks ago", cls: mesh.lastSeen <= 3 ? "up" : mesh.lastSeen <= MESH.WARM_LAST_SEEN ? "warn" : "down" },
+                { k: `Recent (last ${MESH.RECENT_WINDOW})`, v: mesh.recentCount + " appearances", cls: mesh.recentCount >= MESH.HOT_RECENT_MIN ? "up" : "neutral" },
+                { k: "Stable for",          v: mkt.mesh.stableTicks + " ticks", cls: mkt.mesh.stableTicks >= MESH.STABLE_REQUIRED ? "up" : "neutral" },
+                { k: "Profit target",       v: "$" + MESH.PROFIT_TARGET, cls: "warn" }
             ];
 
-            list.innerHTML = rows.map(r =>
+            condList.innerHTML = condRows.map(r =>
                 `<div class="cond-row"><span class="cond-k">${r.k}</span><span class="cond-v ${r.cls}">${r.v}</span></div>`
             ).join("");
+
+            if (isClosed) {
+                recommendEl.className = "mesh-recommend stop";
+                recommendEl.textContent = `ENTRY WINDOW CLOSED — digit ${pred} is no longer the most appearing digit. Reset and re-scan the mesh.`;
+            } else if (mesh.hotState === "hot" && topCount === MESH.LOOKBACKS.length) {
+                recommendEl.className = "mesh-recommend enter";
+                recommendEl.textContent = `ENTRY WINDOW OPEN — digit ${pred} is the most appearing digit across all ${MESH.LOOKBACKS.length} windows. Trade now.`;
+            } else if (mesh.hotState === "hot") {
+                recommendEl.className = "mesh-recommend enter";
+                recommendEl.textContent = `ENTRY WINDOW OPEN — digit ${pred} is the most appearing digit. Keep the bot running.`;
+            } else {
+                recommendEl.className = "mesh-recommend hold";
+                recommendEl.textContent = `ENTRY WINDOW OPEN — digit ${pred} is still top but fading. Watch for the close.`;
+            }
         }
 
         function renderMarketDetail() {
@@ -3474,70 +3705,55 @@
             const isRF = state.activeTab === "risefall";
             const isHL = state.activeTab === "highlow";
             const isOU = state.activeTab === "onlyupdown";
-            const isMATCH = state.activeTab === "matchdiffer";
+            const isMESH = state.activeTab === "mesh";
             const canvas = document.getElementById("histCanvas");
             const titleEl = document.getElementById("detailChartTitle");
             const digitDetail = document.getElementById("digitDetail");
-            const matchesDetail = document.getElementById("matchesDetail");
+            const meshDetail = document.getElementById("meshDetail");
             const rfDetail = document.getElementById("rfDetail");
             const hlDetail = document.getElementById("highLowDetail");
             const ouDetail = document.getElementById("onlyUpDownDetail");
 
+            digitDetail.style.display = "none";
+            meshDetail.style.display = "none";
+            rfDetail.style.display = "none";
+            hlDetail.style.display = "none";
+            ouDetail.style.display = "none";
+
             if (isRF) {
                 const n = Math.min(mkt.quotes.length, state.windowSize);
                 titleEl.textContent = `Price sequence — last ${n} ticks`;
-                digitDetail.style.display = "none";
-                matchesDetail.style.display = "none";
                 rfDetail.style.display = "block";
-                hlDetail.style.display = "none";
-                ouDetail.style.display = "none";
                 drawPriceLine(canvas, mkt.quotes.slice(-state.windowSize));
                 renderConditions(mkt);
-            } else if (isMATCH) {
-                const res = evaluateMatchesStatus(mkt);
-                titleEl.textContent = `Matches distribution — last ${MATCHES.WINDOW} ticks`;
-                digitDetail.style.display = "none";
-                matchesDetail.style.display = "block";
-                rfDetail.style.display = "none";
-                hlDetail.style.display = "none";
-                ouDetail.style.display = "none";
-                drawMatchesGraph(canvas, mkt);
-                renderMatchesConditions(mkt);
+            } else if (isMESH) {
+                titleEl.textContent = `Transitional Mesh — ${MESH.LOOKBACKS.join(" / ")} lookback distribution`;
+                meshDetail.style.display = "block";
+                drawMeshChart(canvas, mkt);
+                renderMeshConditions(mkt);
+                document.getElementById("meshSessions").textContent = state.meshSession.completed;
+                document.getElementById("meshTarget").textContent = "$" + MESH.PROFIT_TARGET;
             } else if (isHL) {
                 const res = evaluateHighLow(mkt, state.windowSize);
                 const barrier = res ? res.meta.barrier : null;
                 const modeDigit = res ? res.meta.predictedDigit : null;
                 const direction = res ? res.direction : null;
                 titleEl.textContent = `Digit distribution + barrier — last ${state.highLowWindow} ticks`;
-                digitDetail.style.display = "none";
-                matchesDetail.style.display = "none";
-                rfDetail.style.display = "none";
                 hlDetail.style.display = "block";
-                ouDetail.style.display = "none";
                 drawDigitHistogram(canvas, mkt, {
                     window: state.highLowWindow,
-                    barrier,
-                    modeDigit,
-                    direction
+                    barrier, modeDigit, direction
                 });
                 renderHighLowConditions(mkt);
             } else if (isOU) {
                 const n = Math.min(mkt.quotes.length, state.windowSize);
                 titleEl.textContent = `Price sequence — last ${n} ticks`;
-                digitDetail.style.display = "none";
-                matchesDetail.style.display = "none";
-                rfDetail.style.display = "none";
-                hlDetail.style.display = "none";
                 ouDetail.style.display = "block";
                 drawPriceLine(canvas, mkt.quotes.slice(-state.windowSize));
                 renderOnlyUpDownConditions(mkt);
             } else {
                 titleEl.textContent = `Digit distribution — last ${state.windowSize} ticks`;
                 digitDetail.style.display = "block";
-                matchesDetail.style.display = "none";
-                rfDetail.style.display = "none";
-                hlDetail.style.display = "none";
-                ouDetail.style.display = "none";
                 drawDigitHistogram(canvas, mkt);
 
                 document.getElementById("streakLine").textContent = mkt.streak.dir
@@ -3630,9 +3846,9 @@
         }
 
         function formatWait(mkt) {
-            if (state.activeTab === "matchdiffer") {
-                if (mkt.digits.length >= MATCHES.MIN_TICKS) return null;
-                return `Collecting ticks — ${mkt.digits.length}/${MATCHES.MIN_TICKS} minimum`;
+            if (state.activeTab === "mesh") {
+                if (mkt.digits.length >= MESH.MIN_TICKS) return null;
+                return `Collecting ticks — ${mkt.digits.length}/${MESH.MIN_TICKS} minimum`;
             }
             const need = Math.min(20, state.windowSize);
             if (mkt.digits.length >= need) return null;
@@ -3642,37 +3858,27 @@
         function scanAllMarkets(windowSize) {
             const out = [];
 
-            if (state.activeTab === "matchdiffer") {
+            if (state.activeTab === "mesh") {
                 markets.forEach(mkt => {
-                    const r = evaluateMatchesStatus(mkt);
+                    const r = evaluateMesh(mkt);
                     if (r) {
-                        out.push({
-                            ...r,
-                            symbol: mkt.code,
-                            marketName: mkt.name,
-                            stageProgress: Math.max(
-                                r.meta && r.meta.readyToSignal ? 100 : 0,
-                                mkt.matches.stage === "wait_dominant" ? 80 :
-                                mkt.matches.stage === "wait_least" ? 65 :
-                                mkt.matches.stage === "opposite_run" ? (mkt.matches.oppositeRun / MATCHES.OPPOSITE_RUN) * 50 :
-                                r.meta && r.meta.leaderValid ? 25 : 0
-                            )
-                        });
+                        out.push({ ...r, symbol: mkt.code, marketName: mkt.name });
                     }
                 });
-
                 out.sort((a, b) => {
-                    const aActive = state.activeConfirmations.has(a.symbol + "|matchdiffer") ? 1 : 0;
-                    const bActive = state.activeConfirmations.has(b.symbol + "|matchdiffer") ? 1 : 0;
-                    return (bActive - aActive) ||
-                           ((b.stageProgress || 0) - (a.stageProgress || 0)) ||
-                           ((b.meta?.dominantPct || 0) - (a.meta?.dominantPct || 0));
+                    const scoreOf = r => {
+                        const s = r.meta.windowState === "open" ? 3 : 1;
+                        const st = r.meta.strength === "strong" ? 3 : r.meta.strength === "medium" ? 2 : 1;
+                        return s * 10 + st;
+                    };
+                    return scoreOf(b) - scoreOf(a);
                 });
                 return out;
             }
 
             markets.forEach(mkt => {
                 Object.keys(CATS).forEach(cat => {
+                    if (cat === "mesh") return;
                     const r = evaluateCategory(mkt, cat, windowSize);
                     if (r && passesScan(r)) {
                         out.push({ ...r, symbol: mkt.code, marketName: mkt.name });
@@ -3692,22 +3898,24 @@
             const subEl = document.getElementById("aiSub");
 
             clearConfidenceLine("aiConfidenceLine");
+            reticle.classList.remove("mesh-hot", "mesh-warm", "mesh-cold");
 
             const top = results[0];
-            const matchActive = state.activeTab === "matchdiffer"
-                ? Array.from(state.activeConfirmations.values()).filter(x => x.category === "matchdiffer")
-                : [];
+            const meshActive = Array.from(state.activeConfirmations.values()).filter(x => x.category === "mesh");
 
-            if (state.activeTab === "matchdiffer" && matchActive.length > 0) {
-                const latest = matchActive[matchActive.length - 1];
-                reticle.classList.add("acquired", "confirmed");
-                eyebrow.textContent = "MATCH SIGNAL";
+            if (state.activeTab === "mesh" && meshActive.length > 0) {
+                const latest = meshActive[meshActive.length - 1];
+                reticle.classList.add("mesh-hot");
+                reticle.classList.remove("confirmed");
+                reticle.classList.add("acquired");
+                eyebrow.textContent = "ENTRY WINDOW OPEN — trade now";
                 eyebrow.classList.add("acquired");
                 marketEl.textContent = latest.marketName;
                 labelEl.className = "ret-label up";
                 labelEl.textContent = `◆ ${latest.label}`;
+                const mm = latest.meshMeta || {};
                 setConfidenceLine("aiConfidenceLine", subEl,
-                    `<b>RULE COMPLETE</b> · next tick tests the predicted digit`);
+                    `<span class="mesh-badge hot">WINDOW OPEN</span> · <b>PREDICT ${mm.predictionDigit}</b> · still the most appearing digit · ${(mm.strength || "").toUpperCase()}`);
                 subEl.textContent = "";
             } else if (!top) {
                 reticle.classList.remove("acquired", "confirmed");
@@ -3715,8 +3923,8 @@
                 eyebrow.classList.remove("acquired");
                 marketEl.textContent = "—";
                 labelEl.className = "ret-label idle";
-                labelEl.textContent = state.activeTab === "matchdiffer"
-                    ? "No market has completed the Matches sequence yet"
+                labelEl.textContent = state.activeTab === "mesh"
+                    ? "No market has opened an entry window yet"
                     : "No repeating pattern across any tracked market yet";
                 subEl.textContent = "Re-scoring every tracked market as new ticks arrive.";
             } else {
@@ -3724,14 +3932,27 @@
                 const topConfirmed = state.activeConfirmations.get(topKey);
                 reticle.classList.add("acquired");
                 reticle.classList.toggle("confirmed", !!topConfirmed);
-                eyebrow.textContent = topConfirmed ? "Confirmed — trade now" : "Target acquired";
+
+                if (top.category === "mesh") {
+                    if (top.meta.windowState === "closed") reticle.classList.add("mesh-cold");
+                    else if (top.meta.hotState === "hot") reticle.classList.add("mesh-hot");
+                    else reticle.classList.add("mesh-warm");
+                    eyebrow.textContent = top.meta.windowState === "closed"
+                        ? "ENTRY WINDOW CLOSED"
+                        : "ENTRY WINDOW OPEN";
+                } else {
+                    eyebrow.textContent = topConfirmed ? "Confirmed — trade now" : "Target acquired";
+                }
                 eyebrow.classList.add("acquired");
                 marketEl.textContent = top.marketName;
                 labelEl.className = "ret-label " + top.direction;
                 labelEl.textContent = (top.direction === "up" ? "↑ " : "↓ ") + top.label;
-                if (top.category === "matchdiffer") {
+
+                if (top.category === "mesh") {
+                    const wLabel = top.meta.windowState === "closed" ? "WINDOW CLOSED" : "WINDOW OPEN";
+                    const wCls = top.meta.windowState === "closed" ? "cold" : "hot";
                     setConfidenceLine("aiConfidenceLine", subEl,
-                        `<b>${top.meta?.stage || "WATCHING"}</b> · leader ${top.meta?.dominantDigit ?? "—"} · prediction MATCHES ${top.meta?.predictionDigit ?? "—"}`);
+                        `<span class="mesh-badge ${wCls}">${wLabel}</span> · <b>PREDICT ${top.meta.predictionDigit}</b> · ${top.meta.isTop25 ? "still top digit" : "no longer top"} · last seen ${top.meta.lastSeen} ticks ago`);
                 } else {
                     setConfidenceLine("aiConfidenceLine", subEl,
                         `<b>${confidenceOf(top)}%</b> confidence &middot; ${CAT_LABELS[top.category]} &middot; ${top.n} ticks`);
@@ -3749,18 +3970,24 @@
                     const short = mkt ? mkt.short : r.symbol;
                     const dirClass = r.direction === "up" ? "up" : "down";
 
-                    if (r.category === "matchdiffer") {
-                        const active = state.activeConfirmations.has(r.symbol + "|matchdiffer");
-                        const stage = r.meta && r.meta.signalJustFired
-                            ? "SIGNAL"
-                            : (r.meta?.stage || "watching").replace("_", " ").toUpperCase();
-                        const target = r.meta?.predictionDigit == null ? "—" : r.meta.predictionDigit;
+                    if (r.category === "mesh") {
+                        const m = r.meta || {};
+                        const active = state.activeConfirmations.has(r.symbol + "|mesh");
+                        const closed = m.windowState === "closed";
+                        const cls = closed ? "down" : "up";
+                        const bestCls = closed ? " mesh-cold-best" : (active || i === 0 ? " mesh-best" : "");
+                        const label = closed
+                            ? `MESH ${m.predictionDigit} · CLOSED`
+                            : `MESH ${m.predictionDigit} · OPEN`;
+                        const sub = closed
+                            ? `${(m.strength || "").toUpperCase()} · last ${m.lastSeen}`
+                            : `${(m.hotState || "").toUpperCase()} · ${(m.strength || "").toUpperCase()} · last ${m.lastSeen}`;
                         return `
-                            <div class="runner${active || i === 0 ? " best" : ""}">
+                            <div class="runner${bestCls}">
                                 <span class="r-sym">${short}</span>
-                                <span class="r-label ${active ? "up" : "r-label"}">${active ? "MATCHES " + target : stage}</span>
-                                <span class="r-conf">${active ? "RULE COMPLETE" : `L${r.meta?.dominantDigit ?? "—"} · P${target}`}</span>
-                                ${active || i === 0 ? '<span class="r-star">◆</span>' : ''}
+                                <span class="r-label ${cls}">${label}</span>
+                                <span class="r-conf">${sub}</span>
+                                ${i === 0 ? '<span class="r-star">◆</span>' : ''}
                             </div>
                         `;
                     }
@@ -3890,7 +4117,8 @@
         });
 
         document.getElementById("ensembleSwitch").addEventListener("click", () => {
-            if (state.activeTab === "risefall" || state.activeTab === "highlow" || state.activeTab === "onlyupdown") return;
+            if (state.activeTab === "risefall" || state.activeTab === "highlow" ||
+                state.activeTab === "onlyupdown" || state.activeTab === "mesh") return;
             const sw = document.getElementById("ensembleSwitch");
             state.ensemble = !state.ensemble;
             sw.classList.toggle("on", state.ensemble);
@@ -3905,12 +4133,13 @@
                 state.activeTab = e.target.dataset.cat;
                 const isHL = state.activeTab === "highlow";
                 const isOU = state.activeTab === "onlyupdown";
-                const isMATCH = state.activeTab === "matchdiffer";
-                document.getElementById("windowPicker").style.display     = (isHL || isOU || isMATCH) ? "none" : "flex";
+                const isMESH = state.activeTab === "mesh";
+                document.getElementById("windowPicker").style.display     = (isHL || isOU || isMESH) ? "none" : "flex";
                 document.getElementById("highLowPicker").style.display    = isHL ? "flex" : "none";
                 document.getElementById("onlyUpDownPicker").style.display = isOU ? "flex" : "none";
                 renderSignalsPanel();
                 renderMarketDetail();
+                if (state.aiScanning) renderAIScan();
             }
         });
 
@@ -3962,7 +4191,8 @@
             radio.addEventListener("change", () => {
                 state.threshold = parseFloat(radio.value);
                 if (state.aiScanning) renderAIScan();
-                if (state.activeTab !== "risefall" && state.activeTab !== "onlyupdown" && state.activeTab !== "matchdiffer") renderSignalsPanel();
+                if (state.activeTab !== "risefall" && state.activeTab !== "onlyupdown" &&
+                    state.activeTab !== "mesh") renderSignalsPanel();
             });
         });
 
@@ -3992,8 +4222,17 @@
         });
 
         document.getElementById("scanAgainBtn").addEventListener("click", () => {
+            const mkt = currentMarket();
+            if (mkt) {
+                mkt.mesh.prediction = null;
+                mkt.mesh.windowState = "pending";
+                mkt.mesh.hotState = "none";
+                mkt.mesh.stableTicks = 0;
+                mkt.mesh.coldSince = -1;
+            }
             state.activeConfirmations.clear();
             state.confirmTracking.clear();
+            state.meshClosedNotice = null;
             document.getElementById("confirmBanner").style.display = "none";
             renderSignalsPanel();
             renderMarketDetail();
@@ -4001,6 +4240,12 @@
 
         document.getElementById("dismissConfirmBtn").addEventListener("click", () => {
             document.getElementById("confirmBanner").style.display = "none";
+            state.meshClosedNotice = null;
+        });
+
+        document.getElementById("meshResetBtn").addEventListener("click", () => {
+            state.meshSession.completed += 1;
+            document.getElementById("meshSessions").textContent = state.meshSession.completed;
         });
 
         /* ==== INIT ==== */
@@ -4009,8 +4254,6 @@
         renderRfPerformance();
         scheduleRender();
 
-        /* Start the cross-market scanner immediately so Matches mode monitors
-           every subscribed market without requiring a second click. */
         const autoScanBtn = document.getElementById("startScanBtn");
         autoScanBtn.textContent = "Stop scan";
         autoScanBtn.classList.add("primary");
@@ -4025,7 +4268,7 @@
             resizeTimer = setTimeout(() => { renderMarketDetail(); }, 200);
         });
 
-        console.log("EMRON PULSE — Dollar Printer Matches + multi-market scanner active.");
+        console.log("EMRON PULSE — Transitional Mesh (150/100/50/25/15, WINDOW OPEN / WINDOW CLOSED) active.");
     })();
 </script>
 </body>
